@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/auth-context'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import Dashboard from '@/components/Dashboard'
 
 export default function DashboardPage() {
   const { user, logout, loading } = useAuth()
@@ -26,21 +27,30 @@ export default function DashboardPage() {
     return null
   }
 
+  const handleLogout = async () => {
+    await logout()
+    router.push('/login')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold">MMORPG 管理画面</h1>
+              <h1 className="text-xl font-semibold text-gray-900">MMORPG 管理画面</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-700">
-                {user.name} ({user.role})
-              </span>
+              <div className="text-sm">
+                <div className="text-gray-700 font-medium">{user.name}</div>
+                <div className="text-gray-500">
+                  {user.role === 'super_admin' ? 'スーパー管理者' :
+                   user.role === 'admin' ? '管理者' : 'モデレーター'}
+                </div>
+              </div>
               <button
-                onClick={logout}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
               >
                 ログアウト
               </button>
@@ -51,16 +61,7 @@ export default function DashboardPage() {
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                ダッシュボード
-              </h2>
-              <p className="text-gray-600">
-                システム統計情報がここに表示されます
-              </p>
-            </div>
-          </div>
+          <Dashboard />
         </div>
       </main>
     </div>
