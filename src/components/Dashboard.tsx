@@ -45,7 +45,6 @@ interface DashboardData {
     name: string
     job_type: string
     max_level: number
-    required_level: number
   }>
   recent_activity: {
     new_users_today: number
@@ -221,7 +220,6 @@ export default function Dashboard() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職業名</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">タイプ</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">必要レベル</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">最大レベル</th>
                 </tr>
               </thead>
@@ -239,7 +237,6 @@ export default function Dashboard() {
                          job.job_type === 'advanced' ? '上級職' : '特殊職'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{job.required_level}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{job.max_level}</td>
                   </tr>
                 ))}
