@@ -10,7 +10,6 @@ interface JobClass {
   name: string
   job_type: string
   max_level: number
-  required_level: number
   experience_multiplier: number
   description?: string
   created_at: string
@@ -195,10 +194,6 @@ export default function JobClassesPage() {
                       <div className="flex justify-between">
                         <span>最大レベル:</span>
                         <span className="font-medium">{jobClass.max_level}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>必要レベル:</span>
-                        <span className="font-medium">{jobClass.required_level}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>経験値倍率:</span>
