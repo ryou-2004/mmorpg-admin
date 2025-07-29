@@ -48,12 +48,20 @@ export default function DashboardPage() {
                    user.role === 'admin' ? '管理者' : 'モデレーター'}
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
-              >
-                ログアウト
-              </button>
+              <div className="space-x-2">
+                <a
+                  href="/users"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                >
+                  ユーザー管理
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                >
+                  ログアウト
+                </button>
+              </div>
             </div>
           </div>
         </div>

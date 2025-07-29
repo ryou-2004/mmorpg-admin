@@ -106,6 +106,11 @@ class ApiClient {
   async getDashboard(): Promise<any> {
     return this.request('/admin/dashboard')
   }
+
+  // 汎用GETメソッド
+  async get<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint)
+  }
 }
 
 export const apiClient = new ApiClient()
