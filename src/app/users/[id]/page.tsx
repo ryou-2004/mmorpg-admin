@@ -37,13 +37,17 @@ interface User {
 export default function UserDetail() {
   const params = useParams()
   const router = useRouter()
-  const { session } = useAuth()
+  const { user: authUser, loading: authLoading } = useAuth()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!session) return
+    if (authLoading) return
+    if (!authUser) {
+      router.push('/login')
+      return
+    }
 
     const fetchUser = async () => {
       try {
@@ -57,7 +61,7 @@ export default function UserDetail() {
     }
 
     fetchUser()
-  }, [params.id, session])
+  }, [params.id, authUser, authLoading, router])
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '未ログイン'
@@ -82,7 +86,11 @@ export default function UserDetail() {
     }
   }
 
-  if (!session) {
+  if (authLoading) {
+    return <div className="p-6">読み込み中...</div>
+  }
+
+  if (!authUser) {
     return <div className="p-6">認証が必要です</div>
   }
 
