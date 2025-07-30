@@ -55,31 +55,31 @@ export default function AdminLayout({
               )}
               <Link
                 href="/dashboard"
-                className="text-blue-500 hover:text-blue-700"
+                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
               >
                 ダッシュボード
               </Link>
               <Link
                 href="/users"
-                className="text-blue-500 hover:text-blue-700"
+                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
               >
                 ユーザー管理
               </Link>
               <Link
                 href="/players"
-                className="text-blue-500 hover:text-blue-700"
+                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
               >
                 プレイヤー管理
               </Link>
               <Link
                 href="/job-classes"
-                className="text-blue-500 hover:text-blue-700"
+                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
               >
                 職業管理
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-red-500 hover:text-red-700"
+                className="px-3 py-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
               >
                 ログアウト
               </button>

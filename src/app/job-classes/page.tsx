@@ -1,39 +1,29 @@
 'use client'
 
-import { useAuth } from '@/lib/auth-context'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { apiClient } from '@/lib/api'
+import AuthGuard from '@/components/AuthGuard'
+import AdminLayout from '@/components/AdminLayout'
 
 interface JobClass {
   id: number
   name: string
   job_type: string
   max_level: number
-  experience_multiplier: number
+  exp_multiplier: number
   description?: string
   created_at: string
-  players_count: number
+  active: boolean
 }
 
 export default function JobClassesPage() {
-  const { user, loading: authLoading } = useAuth()
-  const router = useRouter()
   const [jobClasses, setJobClasses] = useState<JobClass[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login')
-    }
-  }, [user, authLoading, router])
-
-  useEffect(() => {
-    if (user) {
-      fetchJobClasses()
-    }
-  }, [user])
+    fetchJobClasses()
+  }, [])
 
   const fetchJobClasses = async () => {
     try {
