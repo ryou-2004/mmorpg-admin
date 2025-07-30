@@ -10,10 +10,11 @@ interface JobClass {
   name: string
   job_type: string
   max_level: number
-  exp_multiplier: number
+  experience_multiplier: number
   description?: string
   created_at: string
   active: boolean
+  players_count: number
 }
 
 export default function JobClassesPage() {
@@ -28,8 +29,8 @@ export default function JobClassesPage() {
   const fetchJobClasses = async () => {
     try {
       setLoading(true)
-      const jobClasses = await apiClient.get<JobClass[]>('/admin/job_classes')
-      setJobClasses(jobClasses)
+      const response = await apiClient.get<{ data: JobClass[] }>('/admin/job_classes')
+      setJobClasses(response.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : '職業の取得に失敗しました')
     } finally {
@@ -111,7 +112,7 @@ export default function JobClassesPage() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {jobClasses.map((jobClass) => (
+              {Array.isArray(jobClasses) && jobClasses.map((jobClass) => (
                 <div key={jobClass.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start mb-2">
                     <h4 className="text-lg font-medium text-gray-900">{jobClass.name}</h4>
@@ -127,7 +128,11 @@ export default function JobClassesPage() {
                     </div>
                     <div className="flex justify-between">
                       <span>経験値倍率:</span>
-                      <span className="font-medium">x{jobClass.exp_multiplier}</span>
+                      <span className="font-medium">x{jobClass.experience_multiplier}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>習得プレイヤー数:</span>
+                      <span className="font-medium text-blue-600">{jobClass.players_count}人</span>
                     </div>
                   </div>
                   
