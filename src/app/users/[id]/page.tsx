@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+import { apiClient } from '@/lib/api'
 
 interface JobClass {
   id: number
@@ -46,19 +47,8 @@ export default function UserDetail() {
 
     const fetchUser = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/admin/users/${params.id}`, {
-          headers: {
-            'Authorization': `Bearer ${session.token}`,
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error('ユーザー情報の取得に失敗しました')
-        }
-
-        const result = await response.json()
-        setUser(result.data)
+        const response = await apiClient.get<{ data: User }>(`/admin/users/${params.id}`)
+        setUser(response.data)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'エラーが発生しました')
       } finally {
