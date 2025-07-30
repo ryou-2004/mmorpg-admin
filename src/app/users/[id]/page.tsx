@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/auth-context'
+import { useParams } from 'next/navigation'
 import { apiClient } from '@/lib/api'
+import AuthGuard from '@/components/AuthGuard'
+import AdminLayout from '@/components/AdminLayout'
 
 interface JobClass {
   id: number
@@ -36,19 +37,11 @@ interface User {
 
 export default function UserDetail() {
   const params = useParams()
-  const router = useRouter()
-  const { user: authUser, loading: authLoading } = useAuth()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (authLoading) return
-    if (!authUser) {
-      router.push('/login')
-      return
-    }
-
     const fetchUser = async () => {
       try {
         const response = await apiClient.get<{ data: User }>(`/admin/users/${params.id}`)
@@ -61,7 +54,7 @@ export default function UserDetail() {
     }
 
     fetchUser()
-  }, [params.id, authUser, authLoading, router])
+  }, [params.id])
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '未ログイン'
@@ -86,47 +79,43 @@ export default function UserDetail() {
     }
   }
 
-  if (authLoading) {
-    return <div className="p-6">読み込み中...</div>
-  }
-
-  if (!authUser) {
-    return <div className="p-6">認証が必要です</div>
-  }
-
   if (loading) {
-    return <div className="p-6">読み込み中...</div>
+    return (
+      <AuthGuard>
+        <AdminLayout title="ユーザー詳細" showBackButton backHref="/users">
+          <div className="flex justify-center items-center h-64">
+            <div className="text-lg">読み込み中...</div>
+          </div>
+        </AdminLayout>
+      </AuthGuard>
+    )
   }
 
   if (error) {
     return (
-      <div className="p-6">
-        <div className="text-red-600 mb-4">{error}</div>
-        <button
-          onClick={() => router.back()}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-        >
-          戻る
-        </button>
-      </div>
+      <AuthGuard>
+        <AdminLayout title="ユーザー詳細" showBackButton backHref="/users">
+          <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="text-red-700">エラー: {error}</div>
+          </div>
+        </AdminLayout>
+      </AuthGuard>
     )
   }
 
   if (!user) {
-    return <div className="p-6">ユーザーが見つかりません</div>
+    return (
+      <AuthGuard>
+        <AdminLayout title="ユーザー詳細" showBackButton backHref="/users">
+          <div className="text-center text-gray-500">ユーザーが見つかりません</div>
+        </AdminLayout>
+      </AuthGuard>
+    )
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <button
-          onClick={() => router.back()}
-          className="mb-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-        >
-          ← 戻る
-        </button>
-        <h1 className="text-2xl font-bold mb-4">ユーザー詳細</h1>
-      </div>
+    <AuthGuard>
+      <AdminLayout title="ユーザー詳細" showBackButton backHref="/users">
 
       {/* ユーザー基本情報 */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
@@ -229,6 +218,7 @@ export default function UserDetail() {
           </div>
         )}
       </div>
-    </div>
+      </AdminLayout>
+    </AuthGuard>
   )
 }
