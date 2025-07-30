@@ -67,6 +67,12 @@ export default function DashboardPage() {
                 >
                   職業管理
                 </a>
+                <a
+                  href="/items"
+                  className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                >
+                  アイテム管理
+                </a>
                 <button
                   onClick={handleLogout}
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
