@@ -37,7 +37,7 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get('/admin/users')
+      const response = await apiClient.get<{ data: User[] }>('/admin/users')
       setUsers(response.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'ユーザーの取得に失敗しました')
