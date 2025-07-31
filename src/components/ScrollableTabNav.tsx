@@ -103,8 +103,9 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
   }, [visibleTabs])
 
   return (
-    <div className={`relative bg-white border-b border-gray-200 ${className}`}>
-      <div className="flex items-center">
+    <div className={`relative bg-gray-50 border-b-2 border-gray-300 shadow-sm ${className}`}>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center">
         {showLeftArrow && (
           <button
             onClick={scrollLeft}
@@ -120,7 +121,7 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
           className="flex-1 overflow-x-auto scrollbar-hide"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          <div className="flex space-x-1 px-4 py-2 min-w-max">
+          <div className="flex space-x-1 px-4 py-3 min-w-max">
             {visibleTabs.map((tab) => {
               const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/')
               return (
@@ -128,10 +129,10 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
                   key={tab.id}
                   href={tab.href}
                   className={`
-                    px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors
+                    px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 shadow-sm
                     ${isActive
-                      ? 'bg-blue-100 text-blue-700 border border-blue-200'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                      ? 'bg-white text-blue-700 border border-blue-200 shadow-md scale-105'
+                      : 'bg-white/70 text-gray-700 hover:text-gray-900 hover:bg-white hover:shadow-md hover:scale-105'
                     }
                   `}
                 >
@@ -201,6 +202,7 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
           onClick={() => setShowSettings(false)}
         />
       )}
+      </div>
     </div>
   )
 }
