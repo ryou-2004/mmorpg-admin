@@ -66,8 +66,8 @@ export default function PlayerDetailPage() {
   const fetchPlayerDetails = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get<{ data: PlayerDetails }>(`/admin/players/${playerId}`)
-      setPlayer(response.data)
+      const response = await apiClient.get<PlayerDetails>(`/admin/players/${playerId}`)
+      setPlayer(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'プレイヤー詳細の取得に失敗しました')
     } finally {
