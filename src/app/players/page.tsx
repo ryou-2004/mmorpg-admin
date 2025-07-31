@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
@@ -123,6 +124,14 @@ export default function PlayersPage() {
                       }`}>
                         {player.active ? 'アクティブ' : '無効'}
                       </span>
+                      <div className="mt-2">
+                        <Link
+                          href={`/players/${player.id}`}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm"
+                        >
+                          詳細
+                        </Link>
+                      </div>
                     </div>
                   </div>
                   
