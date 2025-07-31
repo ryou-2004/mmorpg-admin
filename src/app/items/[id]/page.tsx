@@ -373,18 +373,6 @@ export default function ItemDetailPage() {
               <div className="text-2xl font-bold text-gray-600">{item.statistics.min_per_player}</div>
               <div className="text-xs text-gray-500">最小所持数</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-green-600">
-                {item.buy_price === 0 ? '-' : `${item.buy_price.toLocaleString()}G`}
-              </div>
-              <div className="text-sm text-gray-500">購入価格</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">
-                {item.sell_price === 0 ? '-' : `${item.sell_price.toLocaleString()}G`}
-              </div>
-              <div className="text-sm text-gray-500">売却価格</div>
-            </div>
           </div>
         </div>
 
