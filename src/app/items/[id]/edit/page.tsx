@@ -24,7 +24,9 @@ interface ItemFormData {
 
 interface Item extends ItemFormData {
   id: number
-  players_count: number
+  statistics: {
+    players_with_item: number
+  }
   created_at: string
   updated_at: string
 }
@@ -244,11 +246,11 @@ export default function EditItemPage() {
           )}
 
           {/* 警告メッセージ */}
-          {item.players_count > 0 && (
+          {item.statistics.players_with_item > 0 && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
               <div className="flex">
                 <div className="text-yellow-800">
-                  <strong>注意:</strong> このアイテムは{item.players_count}人のプレイヤーが所持しています。
+                  <strong>注意:</strong> このアイテムは{item.statistics.players_with_item}人のプレイヤーが所持しています。
                   変更により既存のゲームバランスに影響する可能性があります。
                 </div>
               </div>

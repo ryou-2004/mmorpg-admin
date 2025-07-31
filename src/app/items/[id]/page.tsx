@@ -7,6 +7,15 @@ import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
 
+interface ItemStatistics {
+  total_items: number
+  players_with_item: number
+  average_per_player: number
+  median_per_player: number
+  max_per_player: number
+  min_per_player: number
+}
+
 interface Item {
   id: number
   name: string
@@ -22,9 +31,9 @@ interface Item {
   sale_type: string
   icon_path: string
   active: boolean
-  players_count: number
   created_at: string
   updated_at: string
+  statistics: ItemStatistics
 }
 
 export default function ItemDetailPage() {
@@ -54,8 +63,8 @@ export default function ItemDetailPage() {
   const handleDelete = async () => {
     if (!item) return
     
-    const confirmMessage = item.players_count > 0 
-      ? `このアイテムは${item.players_count}人のプレイヤーが所持しています。本当に削除しますか？`
+    const confirmMessage = item.statistics.players_with_item > 0 
+      ? `このアイテムは${item.statistics.players_with_item}人のプレイヤーが所持しています。本当に削除しますか？`
       : 'このアイテムを削除しますか？'
     
     if (!confirm(confirmMessage)) return
@@ -222,7 +231,7 @@ export default function ItemDetailPage() {
             <div className="text-right">
               <div className="text-sm text-gray-500">ID: {item.id}</div>
               <div className="text-lg font-bold text-purple-600 mt-1">
-                {item.players_count}人が所持
+                {item.statistics.players_with_item}人が所持
               </div>
             </div>
           </div>
@@ -339,10 +348,30 @@ export default function ItemDetailPage() {
         {/* 統計情報 */}
         <div className="bg-white rounded-lg shadow p-6 mt-6">
           <h2 className="text-xl font-semibold mb-4">統計情報</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">{item.players_count}</div>
-              <div className="text-sm text-gray-500">所持プレイヤー数</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="text-center p-4 bg-purple-50 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600">{item.statistics.players_with_item}</div>
+              <div className="text-xs text-gray-500">所持プレイヤー数</div>
+            </div>
+            <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <div className="text-2xl font-bold text-blue-600">{item.statistics.total_items}</div>
+              <div className="text-xs text-gray-500">存在するアイテム数</div>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-2xl font-bold text-green-600">{item.statistics.average_per_player}</div>
+              <div className="text-xs text-gray-500">平均所持数</div>
+            </div>
+            <div className="text-center p-4 bg-yellow-50 rounded-lg">
+              <div className="text-2xl font-bold text-yellow-600">{item.statistics.median_per_player}</div>
+              <div className="text-xs text-gray-500">中央値</div>
+            </div>
+            <div className="text-center p-4 bg-red-50 rounded-lg">
+              <div className="text-2xl font-bold text-red-600">{item.statistics.max_per_player}</div>
+              <div className="text-xs text-gray-500">最大所持数</div>
+            </div>
+            <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-2xl font-bold text-gray-600">{item.statistics.min_per_player}</div>
+              <div className="text-xs text-gray-500">最小所持数</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">

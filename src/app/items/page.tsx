@@ -21,7 +21,6 @@ interface Item {
   sale_type: string
   icon_path: string
   active: boolean
-  players_count: number
   created_at: string
 }
 
@@ -269,10 +268,6 @@ export default function ItemsPage() {
                     <div className="flex justify-between">
                       <span className="text-gray-500">売却可能:</span>
                       <span className="font-medium">{getSaleTypeDisplay(item.sale_type)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">所持プレイヤー:</span>
-                      <span className="font-medium text-purple-600">{item.players_count}人</span>
                     </div>
                     {item.max_stack > 1 && (
                       <div className="flex justify-between">
