@@ -109,12 +109,7 @@ class ApiClient {
 
   // 汎用CRUDメソッド
   async get<T>(endpoint: string): Promise<T> {
-    // 開発環境でのテスト用パラメータを追加
-    const isDevelopment = process.env.NODE_ENV === 'development'
-    const separator = endpoint.includes('?') ? '&' : '?'
-    const testParam = isDevelopment ? `${separator}test=true` : ''
-    
-    return this.request<T>(`${endpoint}${testParam}`)
+    return this.request<T>(endpoint)
   }
 
   async post<T>(endpoint: string, data?: any): Promise<T> {
