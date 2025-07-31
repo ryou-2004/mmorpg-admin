@@ -78,6 +78,12 @@ export default function AdminLayout({
                 職業管理
               </Link>
               <Link
+                href="/job-stats"
+                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
+              >
+                職業統計
+              </Link>
+              <Link
                 href="/items"
                 className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
               >
