@@ -140,10 +140,8 @@ export default function ComparePage() {
   return (
     <AdminLayout title="職業比較" showBackButton backHref="/job-stats">
       <div className="space-y-6">
-        {/* 設定パネル */}
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="space-y-4">
-            {/* レベル選択 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 比較レベル: {selectedLevel}
@@ -168,7 +166,6 @@ export default function ComparePage() {
               </div>
             </div>
 
-            {/* 職業選択 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 比較する職業を選択 ({selectedJobs.length}/6)
@@ -196,7 +193,6 @@ export default function ComparePage() {
               </div>
             </div>
 
-            {/* アクションボタン */}
             <div className="flex space-x-3">
               <button
                 onClick={handleCompare}
@@ -215,14 +211,12 @@ export default function ComparePage() {
           </div>
         </div>
 
-        {/* エラー表示 */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
             エラー: {error}
           </div>
         )}
 
-        {/* 比較結果 */}
         {comparison && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-lg shadow">
@@ -230,7 +224,6 @@ export default function ComparePage() {
                 レベル {comparison.level} での職業比較結果
               </h2>
               
-              {/* ステータス比較テーブル */}
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -308,7 +301,6 @@ export default function ComparePage() {
                 </table>
               </div>
 
-              {/* 成長率補正の比較 */}
               <div className="mt-8">
                 <h3 className="text-md font-medium mb-4">成長率補正の比較</h3>
                 <div className="overflow-x-auto">

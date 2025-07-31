@@ -144,7 +144,6 @@ export default function LevelSamplesPage() {
   return (
     <AdminLayout title="レベル別統計" showBackButton backHref="/job-stats">
       <div className="space-y-6">
-        {/* レベル選択 */}
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center space-x-4">
             <label className="text-lg font-medium text-gray-900">
@@ -169,7 +168,6 @@ export default function LevelSamplesPage() {
           </div>
         </div>
 
-        {/* トップ3ランキング */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-medium mb-4">ステータス別トップ3</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -197,7 +195,6 @@ export default function LevelSamplesPage() {
           </div>
         </div>
 
-        {/* ソート設定 */}
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="flex items-center space-x-4">
             <label className="text-sm font-medium text-gray-700">ソート基準:</label>
@@ -224,7 +221,6 @@ export default function LevelSamplesPage() {
           </div>
         </div>
 
-        {/* 職業統計テーブル */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">

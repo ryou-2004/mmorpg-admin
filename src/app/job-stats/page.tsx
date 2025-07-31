@@ -132,7 +132,6 @@ export default function JobStatsPage() {
   return (
     <AdminLayout title="職業統計">
       <div className="space-y-6">
-        {/* ナビゲーション */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-medium mb-4">職業統計メニュー</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -174,7 +173,6 @@ export default function JobStatsPage() {
             </div>
           </div>
         </div>
-        {/* レベルフィルター */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-medium mb-4">レベル設定</h2>
           <div className="flex items-center space-x-4">
@@ -212,7 +210,6 @@ export default function JobStatsPage() {
           </div>
         </div>
 
-        {/* 職業タイプフィルター */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-lg font-medium mb-4">職業タイプフィルター</h2>
           <div className="flex flex-wrap gap-2">
@@ -242,7 +239,6 @@ export default function JobStatsPage() {
           </div>
         </div>
 
-        {/* 職業統計テーブル */}
         {filteredJobClasses.map(jobClass => (
           <div key={jobClass.id} className="bg-white rounded-lg shadow overflow-hidden">
             <div className="px-6 py-4 bg-gray-50 border-b">
@@ -326,7 +322,6 @@ export default function JobStatsPage() {
               </table>
             </div>
 
-            {/* 基本ステータスと補正値 */}
             <div className="px-6 py-4 bg-gray-50 border-t">
               <div className="grid grid-cols-2 gap-6">
                 <div>
