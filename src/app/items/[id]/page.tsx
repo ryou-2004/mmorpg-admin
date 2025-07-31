@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
@@ -28,9 +29,11 @@ interface Item {
 
 export default function ItemDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const [item, setItem] = useState<Item | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     fetchItem()
@@ -45,6 +48,26 @@ export default function ItemDetailPage() {
       setError(err instanceof Error ? err.message : 'アイテムの取得に失敗しました')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!item) return
+    
+    const confirmMessage = item.players_count > 0 
+      ? `このアイテムは${item.players_count}人のプレイヤーが所持しています。本当に削除しますか？`
+      : 'このアイテムを削除しますか？'
+    
+    if (!confirm(confirmMessage)) return
+
+    try {
+      setDeleting(true)
+      await apiClient.delete(`/admin/items/${params.id}?test=true`)
+      router.push('/items')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'アイテムの削除に失敗しました')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -333,6 +356,25 @@ export default function ItemDetailPage() {
               </div>
               <div className="text-sm text-gray-500">売却価格</div>
             </div>
+          </div>
+        </div>
+
+        {/* アクションボタン */}
+        <div className="bg-white rounded-lg shadow p-6 mt-6">
+          <div className="flex justify-center space-x-4">
+            <Link
+              href={`/items/${item.id}/edit`}
+              className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium transition-colors"
+            >
+              編集
+            </Link>
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="px-6 py-3 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition-colors disabled:opacity-50"
+            >
+              {deleting ? '削除中...' : '削除'}
+            </button>
           </div>
         </div>
 

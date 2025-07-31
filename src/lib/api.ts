@@ -107,9 +107,29 @@ class ApiClient {
     return this.request('/admin/dashboard')
   }
 
-  // 汎用GETメソッド
+  // 汎用CRUDメソッド
   async get<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint)
+  }
+
+  async post<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined,
+    })
+  }
+
+  async put<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    })
+  }
+
+  async delete<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'DELETE',
+    })
   }
 }
 

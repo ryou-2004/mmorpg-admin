@@ -216,6 +216,12 @@ export default function ItemsPage() {
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 アイテム一覧 ({items.length}種類)
               </h3>
+              <Link
+                href="/items/new"
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium transition-colors"
+              >
+                新しいアイテム作成
+              </Link>
             </div>
             
             {/* アイテム一覧 */}

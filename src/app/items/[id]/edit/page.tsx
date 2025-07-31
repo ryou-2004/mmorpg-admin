@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
@@ -22,9 +22,19 @@ interface ItemFormData {
   active: boolean
 }
 
-export default function NewItemPage() {
+interface Item extends ItemFormData {
+  id: number
+  players_count: number
+  created_at: string
+  updated_at: string
+}
+
+export default function EditItemPage() {
+  const params = useParams()
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const [item, setItem] = useState<Item | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState<ItemFormData>({
     name: '',
@@ -51,20 +61,54 @@ export default function NewItemPage() {
     '忍者', '魔剣士', 'パラディン', 'レンジャー', '吟遊詩人', '格闘家'
   ]
 
+  useEffect(() => {
+    fetchItem()
+  }, [params.id])
+
+  const fetchItem = async () => {
+    try {
+      setLoading(true)
+      const response = await apiClient.get<{ data: Item }>(`/admin/items/${params.id}?test=true`)
+      const itemData = response.data
+      setItem(itemData)
+      
+      // フォームデータに設定
+      setFormData({
+        name: itemData.name,
+        description: itemData.description,
+        item_type: itemData.item_type,
+        rarity: itemData.rarity,
+        max_stack: itemData.max_stack,
+        buy_price: itemData.buy_price,
+        sell_price: itemData.sell_price,
+        level_requirement: itemData.level_requirement,
+        job_requirement: itemData.job_requirement,
+        effects: itemData.effects,
+        sale_type: itemData.sale_type,
+        icon_path: itemData.icon_path,
+        active: itemData.active
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'アイテムの取得に失敗しました')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setSaving(true)
     setError(null)
 
     try {
-      await apiClient.post('/admin/items', {
+      await apiClient.put(`/admin/items/${params.id}?test=true`, {
         item: formData
       })
-      router.push('/items')
+      router.push(`/items/${params.id}`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'アイテムの作成に失敗しました')
+      setError(err instanceof Error ? err.message : 'アイテムの更新に失敗しました')
     } finally {
-      setLoading(false)
+      setSaving(false)
     }
   }
 
@@ -155,13 +199,59 @@ export default function NewItemPage() {
     setEffectInput(JSON.stringify(effect, null, 2))
   }
 
+  if (loading) {
+    return (
+      <AuthGuard>
+        <AdminLayout title="アイテム編集" showBackButton backHref={`/items/${params.id}`}>
+          <div className="flex justify-center items-center h-64">
+            <div className="text-lg">読み込み中...</div>
+          </div>
+        </AdminLayout>
+      </AuthGuard>
+    )
+  }
+
+  if (error && !item) {
+    return (
+      <AuthGuard>
+        <AdminLayout title="アイテム編集" showBackButton backHref="/items">
+          <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="text-red-700">エラー: {error}</div>
+          </div>
+        </AdminLayout>
+      </AuthGuard>
+    )
+  }
+
+  if (!item) {
+    return (
+      <AuthGuard>
+        <AdminLayout title="アイテム編集" showBackButton backHref="/items">
+          <div className="text-center text-gray-500">アイテムが見つかりません</div>
+        </AdminLayout>
+      </AuthGuard>
+    )
+  }
+
   return (
     <AuthGuard>
-      <AdminLayout title="新しいアイテム作成" showBackButton backHref="/items">
+      <AdminLayout title={`アイテム編集: ${item.name}`} showBackButton backHref={`/items/${params.id}`}>
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-md p-4">
               <div className="text-red-700">エラー: {error}</div>
+            </div>
+          )}
+
+          {/* 警告メッセージ */}
+          {item.players_count > 0 && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+              <div className="flex">
+                <div className="text-yellow-800">
+                  <strong>注意:</strong> このアイテムは{item.players_count}人のプレイヤーが所持しています。
+                  変更により既存のゲームバランスに影響する可能性があります。
+                </div>
+              </div>
             </div>
           )}
 
@@ -529,17 +619,17 @@ export default function NewItemPage() {
           <div className="flex justify-end space-x-4">
             <button
               type="button"
-              onClick={() => router.push('/items')}
+              onClick={() => router.push(`/items/${params.id}`)}
               className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
             >
               キャンセル
             </button>
             <button
               type="submit"
-              disabled={loading}
+              disabled={saving}
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
             >
-              {loading ? '作成中...' : 'アイテム作成'}
+              {saving ? '更新中...' : 'アイテム更新'}
             </button>
           </div>
         </form>
