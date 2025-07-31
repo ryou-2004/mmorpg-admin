@@ -13,19 +13,29 @@ interface Player {
   active: boolean
   created_at: string
   last_login_at?: string
+  current_job?: {
+    job_name: string
+    level: number
+    experience: number
+    skill_points: number
+    stats: {
+      hp: number
+      max_hp: number
+      mp: number
+      max_mp: number
+      attack: number
+      defense: number
+      magic_attack: number
+      magic_defense: number
+      agility: number
+      luck: number
+    }
+  }
   user: {
     id: number
     name: string
     email: string
   }
-  job_classes: Array<{
-    id: number
-    name: string
-    job_type: string
-    level: number
-    experience: number
-    unlocked_at: string
-  }>
 }
 
 export default function PlayersPage() {
@@ -116,6 +126,11 @@ export default function PlayersPage() {
                           最終ログイン: {new Date(player.last_login_at).toLocaleString('ja-JP')}
                         </p>
                       )}
+                      {player.current_job && (
+                        <p className="text-sm font-medium text-blue-600">
+                          現在の職業: {player.current_job.job_name} Lv.{player.current_job.level}
+                        </p>
+                      )}
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-gray-500">プレイヤーID: {player.id}</div>
@@ -134,35 +149,6 @@ export default function PlayersPage() {
                       </div>
                     </div>
                   </div>
-                  
-                  {player.job_classes.length > 0 && (
-                    <div>
-                      <h5 className="text-sm font-medium text-gray-700 mb-2">習得職業:</h5>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                        {player.job_classes.map((job) => (
-                          <div key={job.id} className="bg-gray-50 p-2 rounded">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium">{job.name}</span>
-                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                job.job_type === 'basic' ? 'bg-blue-100 text-blue-800' :
-                                job.job_type === 'advanced' ? 'bg-purple-100 text-purple-800' :
-                                'bg-yellow-100 text-yellow-800'
-                              }`}>
-                                {job.job_type === 'basic' ? '基本職' : 
-                                 job.job_type === 'advanced' ? '上級職' : '特殊職'}
-                              </span>
-                            </div>
-                            <div className="text-xs text-gray-500 mt-1">
-                              Lv.{job.level} (EXP: {job.experience.toLocaleString()})
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              習得: {new Date(job.unlocked_at).toLocaleDateString('ja-JP')}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
