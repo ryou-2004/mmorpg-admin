@@ -230,9 +230,6 @@ export default function ItemDetailPage() {
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500">ID: {item.id}</div>
-              <div className="text-lg font-bold text-purple-600 mt-1">
-                {item.statistics.players_with_item}人が所持
-              </div>
             </div>
           </div>
         </div>
