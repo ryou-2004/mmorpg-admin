@@ -1,9 +1,9 @@
 'use client'
 
 import { ReactNode } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+import ScrollableTabNav from './ScrollableTabNav'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -53,42 +53,6 @@ export default function AdminLayout({
                   {user.name} ({user.role})
                 </span>
               )}
-              <Link
-                href="/dashboard"
-                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-              >
-                ダッシュボード
-              </Link>
-              <Link
-                href="/users"
-                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-              >
-                ユーザー管理
-              </Link>
-              <Link
-                href="/players"
-                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-              >
-                プレイヤー管理
-              </Link>
-              <Link
-                href="/job-classes"
-                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-              >
-                職業管理
-              </Link>
-              <Link
-                href="/job-stats"
-                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-              >
-                職業統計
-              </Link>
-              <Link
-                href="/items"
-                className="px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
-              >
-                アイテム管理
-              </Link>
               <button
                 onClick={handleLogout}
                 className="px-3 py-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
@@ -99,6 +63,9 @@ export default function AdminLayout({
           </div>
         </div>
       </nav>
+
+      {/* Scrollable Tab Navigation */}
+      <ScrollableTabNav />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
