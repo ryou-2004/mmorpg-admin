@@ -9,9 +9,14 @@ const nextConfig = {
     ]
   },
   // WSL環境でのホットリロード対応
-  watchOptions: {
-    poll: 1000,
-    aggregateTimeout: 300,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      }
+    }
+    return config
   },
 }
 
