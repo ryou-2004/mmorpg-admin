@@ -8,6 +8,11 @@ const nextConfig = {
       },
     ]
   },
+  // WSL環境でのホットリロード対応
+  watchOptions: {
+    poll: 1000,
+    aggregateTimeout: 300,
+  },
 }
 
 module.exports = nextConfig
