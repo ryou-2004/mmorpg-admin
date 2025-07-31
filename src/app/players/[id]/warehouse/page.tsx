@@ -92,9 +92,9 @@ export default function PlayerWarehousePage() {
     try {
       setLoading(true)
       const response = await apiClient.get<PlayerDetails>(`/admin/players/${playerId}`)
-      setPlayer(response.data)
-      if (response.data.warehouses.length > 0) {
-        setSelectedWarehouse(response.data.warehouses[0])
+      setPlayer(response)
+      if (response.warehouses.length > 0) {
+        setSelectedWarehouse(response.warehouses[0])
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'プレイヤーデータの取得に失敗しました')
@@ -106,7 +106,7 @@ export default function PlayerWarehousePage() {
   const fetchWarehouseData = async (warehouseId: number) => {
     try {
       const response = await apiClient.get<WarehouseData>(`/admin/players/${playerId}/player_items?location=warehouse&warehouse_id=${warehouseId}`)
-      setWarehouseData(response.data)
+      setWarehouseData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : '倉庫データの取得に失敗しました')
     }

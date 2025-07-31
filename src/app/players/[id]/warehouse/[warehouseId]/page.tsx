@@ -83,13 +83,13 @@ export default function WarehouseDetailPage() {
       
       // プレイヤー情報から倉庫情報を取得
       const playerResponse = await apiClient.get(`/admin/players/${playerId}`)
-      const playerData = playerResponse.data
+      const playerData = playerResponse
       const warehouseInfo = playerData.warehouses.find((w: Warehouse) => w.id === parseInt(warehouseId))
       setWarehouse(warehouseInfo)
       
       // 倉庫のアイテム情報を取得
       const warehouseResponse = await apiClient.get<WarehouseData>(`/admin/players/${playerId}/player_items?location=warehouse&warehouse_id=${warehouseId}`)
-      setWarehouseData(warehouseResponse.data)
+      setWarehouseData(warehouseResponse)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'データの取得に失敗しました')
     } finally {

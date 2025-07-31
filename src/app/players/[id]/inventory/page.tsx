@@ -71,7 +71,7 @@ export default function PlayerInventoryPage() {
     try {
       setLoading(true)
       const response = await apiClient.get<InventoryData>(`/admin/players/${playerId}/player_items?location=inventory`)
-      setInventoryData(response.data)
+      setInventoryData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'インベントリデータの取得に失敗しました')
     } finally {

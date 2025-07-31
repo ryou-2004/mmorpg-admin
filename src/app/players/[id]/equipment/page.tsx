@@ -71,7 +71,7 @@ export default function PlayerEquipmentPage() {
     try {
       setLoading(true)
       const response = await apiClient.get<EquipmentData>(`/admin/players/${playerId}/player_items?location=equipped`)
-      setEquipmentData(response.data)
+      setEquipmentData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : '装備データの取得に失敗しました')
     } finally {
