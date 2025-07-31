@@ -95,7 +95,7 @@ export default function JobStatsPage() {
     selectedJobTypeFilter === 'all' || job.job_type === selectedJobTypeFilter
   ) || []
 
-  const jobTypes = jobStats ? [...new Set(jobStats.job_classes.map(job => job.job_type))] : []
+  const jobTypes = jobStats ? Array.from(new Set(jobStats.job_classes.map(job => job.job_type))) : []
 
   const getJobTypeBadgeColor = (jobType: string) => {
     switch (jobType) {

@@ -83,7 +83,7 @@ export default function WarehouseDetailPage() {
       
       // プレイヤー情報から倉庫情報を取得
       const playerResponse = await apiClient.get(`/admin/players/${playerId}`)
-      const playerData = playerResponse
+      const playerData = playerResponse as any
       const warehouseInfo = playerData.warehouses.find((w: Warehouse) => w.id === parseInt(warehouseId))
       setWarehouse(warehouseInfo)
       
