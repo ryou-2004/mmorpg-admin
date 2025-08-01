@@ -32,8 +32,12 @@ interface CharacterDetails {
   }
   job_classes: Array<{
     id: number
-    name: string
-    job_type: string
+    job_class: {
+      id: number
+      name: string
+      job_type: string
+      max_level: number
+    }
     level: number
     experience: number
     skill_points: number
@@ -259,18 +263,16 @@ export default function CharacterDetailPage() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {character.job_classes.map((job) => (
-                    <div key={job.id} className="bg-gray-50 p-4 rounded-lg relative">
-                      <div className="absolute top-2 right-2">
-                        <span className="font-semibold text-gray-900">{job.name}</span>
-                      </div>
-                      <div className="flex justify-between items-center mb-2 mt-6">
+                    <div key={job.id} className="bg-gray-50 p-4 rounded-lg">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-semibold text-gray-900">{job.job_class.name}</span>
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          job.job_type === 'basic' ? 'bg-blue-100 text-blue-800' :
-                          job.job_type === 'advanced' ? 'bg-purple-100 text-purple-800' :
+                          job.job_class.job_type === 'basic' ? 'bg-blue-100 text-blue-800' :
+                          job.job_class.job_type === 'advanced' ? 'bg-purple-100 text-purple-800' :
                           'bg-yellow-100 text-yellow-800'
                         }`}>
-                          {job.job_type === 'basic' ? '基本職' : 
-                           job.job_type === 'advanced' ? '上級職' : '特殊職'}
+                          {job.job_class.job_type === 'basic' ? '基本職' : 
+                           job.job_class.job_type === 'advanced' ? '上級職' : '特殊職'}
                         </span>
                       </div>
                       <div className="space-y-1 text-sm text-gray-600">
