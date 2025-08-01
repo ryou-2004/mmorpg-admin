@@ -66,11 +66,11 @@ interface CharacterDetails {
   warehouses: Warehouse[]
 }
 
-export default function PlayerWarehousePage() {
+export default function CharacterWarehousePage() {
   const params = useParams()
   const characterId = params.id as string
   
-  const [player, setCharacter] = useState<CharacterDetails | null>(null)
+  const [character, setCharacter] = useState<CharacterDetails | null>(null)
   const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null)
   const [warehouseData, setWarehouseData] = useState<WarehouseData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -78,7 +78,7 @@ export default function PlayerWarehousePage() {
 
   useEffect(() => {
     if (characterId) {
-      fetchPlayerData()
+      fetchCharacterData()
     }
   }, [characterId])
 
@@ -88,7 +88,7 @@ export default function PlayerWarehousePage() {
     }
   }, [selectedWarehouse])
 
-  const fetchPlayerData = async () => {
+  const fetchCharacterData = async () => {
     try {
       setLoading(true)
       const response = await apiClient.get<CharacterDetails>(`/admin/characters/${characterId}`)
@@ -150,7 +150,7 @@ export default function PlayerWarehousePage() {
           <div className="bg-red-50 border border-red-200 rounded-md p-4">
             <div className="text-red-700">エラー: {error || 'データが見つかりません'}</div>
             <button
-              onClick={fetchPlayerData}
+              onClick={fetchCharacterData}
               className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded text-sm"
             >
               再試行
@@ -161,12 +161,12 @@ export default function PlayerWarehousePage() {
     )
   }
 
-  if (player.warehouses.length === 0) {
+  if (character.warehouses.length === 0) {
     return (
       <AuthGuard>
-        <AdminLayout title={`${player.name}の倉庫管理`} showBackButton backHref={`/characters/${characterId}`}>
+        <AdminLayout title={`${character.name}の倉庫管理`} showBackButton backHref={`/characters/${characterId}`}>
           <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
-            <div className="text-yellow-700">このプレイヤーは倉庫を持っていません</div>
+            <div className="text-yellow-700">このキャラクターは倉庫を持っていません</div>
           </div>
         </AdminLayout>
       </AuthGuard>
@@ -175,7 +175,7 @@ export default function PlayerWarehousePage() {
 
   return (
     <AuthGuard>
-      <AdminLayout title={`${player.name}の倉庫管理`} showBackButton backHref={`/characters/${characterId}`}>
+      <AdminLayout title={`${character.name}の倉庫管理`} showBackButton backHref={`/characters/${characterId}`}>
         <div className="space-y-6">
           {/* ヘッダー情報 */}
           <div className="bg-white shadow rounded-lg p-6">
@@ -183,8 +183,8 @@ export default function PlayerWarehousePage() {
               <div>
                 <h3 className="text-lg font-medium text-gray-900">倉庫管理</h3>
                 <p className="text-sm text-gray-500">
-                  キャラクター: {player.name} | 
-                  倉庫数: {player.warehouses.length}個
+                  キャラクター: {character.name} | 
+                  倉庫数: {character.warehouses.length}個
                 </p>
               </div>
               <div className="flex space-x-2">
@@ -208,7 +208,7 @@ export default function PlayerWarehousePage() {
           <div className="bg-white shadow rounded-lg">
             <div className="border-b border-gray-200">
               <nav className="-mb-px flex space-x-8 px-6" aria-label="Tabs">
-                {player.warehouses.map((warehouse) => (
+                {character.warehouses.map((warehouse) => (
                   <button
                     key={warehouse.id}
                     onClick={() => setSelectedWarehouse(warehouse)}
