@@ -165,7 +165,6 @@ export default function PlayersPage() {
                 </tbody>
               </table>
             </div>
-            </div>
           </div>
         </div>
       </AdminLayout>
