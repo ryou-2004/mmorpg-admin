@@ -36,7 +36,7 @@ export default function ItemsPage() {
 
   useEffect(() => {
     fetchItems()
-  }, [filters])
+  }, [])
 
   const fetchItems = async () => {
     try {
@@ -54,6 +54,10 @@ export default function ItemsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleFilterChange = () => {
+    fetchItems()
   }
 
   const getRarityColor = (rarity: string) => {
@@ -154,7 +158,10 @@ export default function ItemsPage() {
                 </label>
                 <select
                   value={filters.item_type}
-                  onChange={(e) => setFilters({...filters, item_type: e.target.value})}
+                  onChange={(e) => {
+                    setFilters({...filters, item_type: e.target.value})
+                    setTimeout(handleFilterChange, 0)
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">全て</option>
@@ -173,7 +180,10 @@ export default function ItemsPage() {
                 </label>
                 <select
                   value={filters.rarity}
-                  onChange={(e) => setFilters({...filters, rarity: e.target.value})}
+                  onChange={(e) => {
+                    setFilters({...filters, rarity: e.target.value})
+                    setTimeout(handleFilterChange, 0)
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">全て</option>
@@ -191,7 +201,10 @@ export default function ItemsPage() {
                 </label>
                 <select
                   value={filters.active}
-                  onChange={(e) => setFilters({...filters, active: e.target.value})}
+                  onChange={(e) => {
+                    setFilters({...filters, active: e.target.value})
+                    setTimeout(handleFilterChange, 0)
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">全て</option>
