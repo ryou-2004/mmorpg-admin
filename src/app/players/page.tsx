@@ -106,64 +106,65 @@ export default function PlayersPage() {
               </button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {players.map((player) => (
-                <div key={player.id} className="relative">
-                  <Link href={`/players/${player.id}`} className="block">
-                    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer">
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="text-lg font-medium text-gray-900">{player.name}</h4>
-                        <span className="text-sm text-gray-500">ID: {player.id}</span>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                          <span className="text-gray-500">ゴールド:</span>
-                          <span className="ml-1 font-medium">{player.gold.toLocaleString()}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-500">レベル:</span>
-                          <span className="ml-1 font-medium">{player.current_job?.level || '-'}</span>
-                        </div>
-                        <div className="col-span-2">
-                          <span className="text-gray-500">職業:</span>
-                          <span className="ml-1 font-medium">{player.current_job?.job_name || '未設定'}</span>
-                        </div>
-                        <div className="col-span-2">
-                          <span className="text-gray-500">最終ログイン:</span>
-                          <span className="ml-1 font-medium">
-                            {player.last_login_at ? 
-                              new Date(player.last_login_at).toLocaleDateString('ja-JP') : 
-                              '未ログイン'
-                            }
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs text-gray-500">ユーザー:</span>
-                          <span className="text-sm font-medium">{player.user.name}</span>
-                        </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">プレイヤー名</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ユーザー</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職業</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レベル</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ゴールド</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">最終ログイン</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {players.map((player) => (
+                    <tr key={player.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{player.id}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
+                        <Link href={`/players/${player.id}`} className="hover:underline">
+                          {player.name}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.user.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.current_job?.job_name || '未設定'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.current_job?.level || '-'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.gold.toLocaleString()} G</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {player.last_login_at ? new Date(player.last_login_at).toLocaleString('ja-JP') : '未ログイン'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           player.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }`}>
                           {player.active ? 'アクティブ' : '無効'}
                         </span>
-                      </div>
-                    </div>
-                  </Link>
-                  <div className="absolute top-2 right-2 z-10">
-                    <Link
-                      href={`/players/${player.id}/edit`}
-                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      編集
-                    </Link>
-                  </div>
-                </div>
-              ))}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div className="flex space-x-2">
+                          <Link
+                            href={`/players/${player.id}`}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
+                            詳細
+                          </Link>
+                          <Link
+                            href={`/players/${player.id}/edit`}
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
+                            編集
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             </div>
           </div>
         </div>
