@@ -255,13 +255,15 @@ export default function CharacterDetailPage() {
             <div className="bg-white shadow rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                  習得職業 ({character.job_classes.map(job => job.name).join('、')})
+                  習得職業 ({character.job_classes.length}個)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {character.job_classes.map((job) => (
-                    <div key={job.id} className="bg-gray-50 p-4 rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="font-medium">{job.name}</span>
+                    <div key={job.id} className="bg-gray-50 p-4 rounded-lg relative">
+                      <div className="absolute top-2 right-2">
+                        <span className="font-semibold text-gray-900">{job.name}</span>
+                      </div>
+                      <div className="flex justify-between items-center mb-2 mt-6">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           job.job_type === 'basic' ? 'bg-blue-100 text-blue-800' :
                           job.job_type === 'advanced' ? 'bg-purple-100 text-purple-800' :
