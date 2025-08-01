@@ -9,7 +9,7 @@ import AdminLayout from '@/components/AdminLayout'
 
 interface ItemStatistics {
   total_items: number
-  players_with_item: number
+  characters_with_item: number
   average_per_player: number
   median_per_player: number
   max_per_player: number
@@ -63,8 +63,8 @@ export default function ItemDetailPage() {
   const handleDelete = async () => {
     if (!item) return
     
-    const confirmMessage = item.statistics.players_with_item > 0 
-      ? `このアイテムは${item.statistics.players_with_item}人のプレイヤーが所持しています。本当に削除しますか？`
+    const confirmMessage = item.statistics.characters_with_item > 0 
+      ? `このアイテムは${item.statistics.characters_with_item}人のキャラクターが所持しています。本当に削除しますか？`
       : 'このアイテムを削除しますか？'
     
     if (!confirm(confirmMessage)) return
@@ -347,7 +347,7 @@ export default function ItemDetailPage() {
           <h2 className="text-xl font-semibold mb-4">統計情報</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">{item.statistics.players_with_item}</div>
+              <div className="text-2xl font-bold text-purple-600">{item.statistics.characters_with_item}</div>
               <div className="text-xs text-gray-500">所持プレイヤー数</div>
             </div>
             <div className="text-center p-4 bg-blue-50 rounded-lg">

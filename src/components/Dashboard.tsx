@@ -12,8 +12,8 @@ interface DashboardData {
     active_permissions: number
     total_users: number
     active_users: number
-    total_players: number
-    active_players: number
+    total_characters: number
+    active_characters: number
     total_job_classes: number
     active_job_classes: number
     basic_jobs: number
@@ -48,8 +48,8 @@ interface DashboardData {
   }>
   recent_activity: {
     new_users_today: number
-    new_players_today: number
-    active_players_today: number
+    new_characters_today: number
+    active_characters_today: number
   }
 }
 
@@ -129,8 +129,8 @@ export default function Dashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">総プレイヤー数</dt>
-                  <dd className="text-lg font-medium text-gray-900">{data.stats.total_players}</dd>
+                  <dt className="text-sm font-medium text-gray-500 truncate">総キャラクター数</dt>
+                  <dd className="text-lg font-medium text-gray-900">{data.stats.total_characters}</dd>
                 </dl>
               </div>
             </div>
@@ -184,12 +184,12 @@ export default function Dashboard() {
               <div className="text-sm text-gray-500">新規ユーザー</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{data.recent_activity.new_players_today}</div>
-              <div className="text-sm text-gray-500">新規プレイヤー</div>
+              <div className="text-2xl font-bold text-green-600">{data.recent_activity.new_characters_today}</div>
+              <div className="text-sm text-gray-500">新規キャラクター</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{data.recent_activity.active_players_today}</div>
-              <div className="text-sm text-gray-500">アクティブプレイヤー</div>
+              <div className="text-2xl font-bold text-purple-600">{data.recent_activity.active_characters_today}</div>
+              <div className="text-sm text-gray-500">アクティブキャラクター</div>
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ interface JobClass {
   description?: string
   created_at: string
   active: boolean
-  players_count: number
+  characters_count: number
 }
 
 export default function JobClassesPage() {
@@ -132,7 +132,7 @@ export default function JobClassesPage() {
                     </div>
                     <div className="flex justify-between">
                       <span>習得プレイヤー数:</span>
-                      <span className="font-medium text-blue-600">{jobClass.players_count}人</span>
+                      <span className="font-medium text-blue-600">{jobClass.characters_count}人</span>
                     </div>
                   </div>
                   

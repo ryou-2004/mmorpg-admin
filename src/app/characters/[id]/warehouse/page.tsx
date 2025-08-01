@@ -7,7 +7,7 @@ import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
 
-interface PlayerItem {
+interface CharacterItem {
   id: number
   quantity: number
   equipped: boolean
@@ -49,18 +49,18 @@ interface Warehouse {
 }
 
 interface WarehouseData {
-  data: PlayerItem[]
+  data: CharacterItem[]
   meta: {
     location: string
     total_count: number
-    player: {
+    character: {
       id: number
       name: string
     }
   }
 }
 
-interface PlayerDetails {
+interface CharacterDetails {
   id: number
   name: string
   warehouses: Warehouse[]
@@ -68,19 +68,19 @@ interface PlayerDetails {
 
 export default function PlayerWarehousePage() {
   const params = useParams()
-  const playerId = params.id as string
+  const characterId = params.id as string
   
-  const [player, setPlayer] = useState<PlayerDetails | null>(null)
+  const [player, setCharacter] = useState<CharacterDetails | null>(null)
   const [selectedWarehouse, setSelectedWarehouse] = useState<Warehouse | null>(null)
   const [warehouseData, setWarehouseData] = useState<WarehouseData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (playerId) {
+    if (characterId) {
       fetchPlayerData()
     }
-  }, [playerId])
+  }, [characterId])
 
   useEffect(() => {
     if (selectedWarehouse) {
@@ -91,8 +91,8 @@ export default function PlayerWarehousePage() {
   const fetchPlayerData = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get<PlayerDetails>(`/admin/players/${playerId}`)
-      setPlayer(response)
+      const response = await apiClient.get<CharacterDetails>(`/admin/characters/${characterId}`)
+      setCharacter(response)
       if (response.warehouses.length > 0) {
         setSelectedWarehouse(response.warehouses[0])
       }
@@ -105,7 +105,7 @@ export default function PlayerWarehousePage() {
 
   const fetchWarehouseData = async (warehouseId: number) => {
     try {
-      const response = await apiClient.get<WarehouseData>(`/admin/players/${playerId}/player_items?location=warehouse&warehouse_id=${warehouseId}`)
+      const response = await apiClient.get<WarehouseData>(`/admin/characters/${characterId}/character_items?location=warehouse&warehouse_id=${warehouseId}`)
       setWarehouseData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : '倉庫データの取得に失敗しました')
@@ -134,7 +134,7 @@ export default function PlayerWarehousePage() {
   if (loading) {
     return (
       <AuthGuard>
-        <AdminLayout title="倉庫管理" showBackButton backHref={`/players/${playerId}`}>
+        <AdminLayout title="倉庫管理" showBackButton backHref={`/characters/${characterId}`}>
           <div className="flex justify-center items-center h-64">
             <div className="text-lg">読み込み中...</div>
           </div>
@@ -143,10 +143,10 @@ export default function PlayerWarehousePage() {
     )
   }
 
-  if (error || !player) {
+  if (error || !character) {
     return (
       <AuthGuard>
-        <AdminLayout title="倉庫管理" showBackButton backHref={`/players/${playerId}`}>
+        <AdminLayout title="倉庫管理" showBackButton backHref={`/characters/${characterId}`}>
           <div className="bg-red-50 border border-red-200 rounded-md p-4">
             <div className="text-red-700">エラー: {error || 'データが見つかりません'}</div>
             <button
@@ -164,7 +164,7 @@ export default function PlayerWarehousePage() {
   if (player.warehouses.length === 0) {
     return (
       <AuthGuard>
-        <AdminLayout title={`${player.name}の倉庫管理`} showBackButton backHref={`/players/${playerId}`}>
+        <AdminLayout title={`${player.name}の倉庫管理`} showBackButton backHref={`/characters/${characterId}`}>
           <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
             <div className="text-yellow-700">このプレイヤーは倉庫を持っていません</div>
           </div>
@@ -175,7 +175,7 @@ export default function PlayerWarehousePage() {
 
   return (
     <AuthGuard>
-      <AdminLayout title={`${player.name}の倉庫管理`} showBackButton backHref={`/players/${playerId}`}>
+      <AdminLayout title={`${player.name}の倉庫管理`} showBackButton backHref={`/characters/${characterId}`}>
         <div className="space-y-6">
           {/* ヘッダー情報 */}
           <div className="bg-white shadow rounded-lg p-6">
@@ -183,19 +183,19 @@ export default function PlayerWarehousePage() {
               <div>
                 <h3 className="text-lg font-medium text-gray-900">倉庫管理</h3>
                 <p className="text-sm text-gray-500">
-                  プレイヤー: {player.name} | 
+                  キャラクター: {player.name} | 
                   倉庫数: {player.warehouses.length}個
                 </p>
               </div>
               <div className="flex space-x-2">
                 <Link
-                  href={`/players/${playerId}/inventory`}
+                  href={`/characters/${characterId}/inventory`}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm"
                 >
                   インベントリへ
                 </Link>
                 <Link
-                  href={`/players/${playerId}/equipment`}
+                  href={`/characters/${characterId}/equipment`}
                   className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-sm"
                 >
                   装備へ
@@ -239,7 +239,7 @@ export default function PlayerWarehousePage() {
                     </p>
                   </div>
                   <Link
-                    href={`/players/${playerId}/warehouse/${selectedWarehouse.id}`}
+                    href={`/characters/${characterId}/warehouse/${selectedWarehouse.id}`}
                     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
                   >
                     詳細管理
@@ -257,28 +257,28 @@ export default function PlayerWarehousePage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {warehouseData.data.slice(0, 9).map((playerItem) => (
-                      <div key={playerItem.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                    {warehouseData.data.slice(0, 9).map((characterItem) => (
+                      <div key={characterItem.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
                         <div className="flex items-center space-x-3">
                           <div className="flex-shrink-0">
                             <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-lg">
-                              {getItemTypeIcon(playerItem.item.item_type)}
+                              {getItemTypeIcon(characterItem.item.item_type)}
                             </div>
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-1">
                               <span className="text-sm font-medium text-gray-900 truncate">
-                                {playerItem.item.name}
+                                {characterItem.item.name}
                               </span>
-                              <span className="text-sm">{getRarityIcon(playerItem.item.rarity)}</span>
+                              <span className="text-sm">{getRarityIcon(characterItem.item.rarity)}</span>
                             </div>
                             <div className="flex items-center space-x-2 text-xs text-gray-500">
-                              {playerItem.quantity > 1 && (
-                                <span>x{playerItem.quantity}</span>
+                              {characterItem.quantity > 1 && (
+                                <span>x{characterItem.quantity}</span>
                               )}
-                              {playerItem.locked && <span>🔒</span>}
-                              {playerItem.enchantment_level > 0 && (
-                                <span>+{playerItem.enchantment_level}</span>
+                              {characterItem.locked && <span>🔒</span>}
+                              {characterItem.enchantment_level > 0 && (
+                                <span>+{characterItem.enchantment_level}</span>
                               )}
                             </div>
                           </div>
@@ -289,7 +289,7 @@ export default function PlayerWarehousePage() {
                     {warehouseData.data.length > 9 && (
                       <div className="border border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center">
                         <Link
-                          href={`/players/${playerId}/warehouse/${selectedWarehouse.id}`}
+                          href={`/characters/${characterId}/warehouse/${selectedWarehouse.id}`}
                           className="text-blue-500 hover:text-blue-700 text-sm font-medium"
                         >
                           他 {warehouseData.data.length - 9} アイテムを表示

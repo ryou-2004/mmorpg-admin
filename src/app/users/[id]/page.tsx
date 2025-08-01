@@ -15,7 +15,7 @@ interface JobClass {
   unlocked_at: string
 }
 
-interface Player {
+interface Character {
   id: number
   name: string
   gold: number
@@ -32,7 +32,7 @@ interface User {
   active: boolean
   created_at: string
   last_login_at: string | null
-  players: Player[]
+  characters: Character[]
 }
 
 export default function UserDetail() {
@@ -152,50 +152,50 @@ export default function UserDetail() {
         </div>
       </div>
 
-      {/* プレイヤー一覧 */}
+      {/* キャラクター一覧 */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">
-          プレイヤー一覧 ({user.players.length}キャラクター)
+          キャラクター一覧 ({user.characters.length}人)
         </h2>
         
-        {user.players.length === 0 ? (
-          <p className="text-gray-500">プレイヤーが存在しません</p>
+        {user.characters.length === 0 ? (
+          <p className="text-gray-500">キャラクターが存在しません</p>
         ) : (
           <div className="space-y-6">
-            {user.players.map((player) => (
-              <div key={player.id} className="border border-gray-200 rounded-lg p-4">
+            {user.characters.map((character) => (
+              <div key={character.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-medium">{player.name}</h3>
-                    <p className="text-sm text-gray-500">ID: {player.id}</p>
+                    <h3 className="text-lg font-medium">{character.name}</h3>
+                    <p className="text-sm text-gray-500">ID: {character.id}</p>
                   </div>
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    player.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    character.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                   }`}>
-                    {player.active ? 'アクティブ' : '無効'}
+                    {character.active ? 'アクティブ' : '無効'}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">所持金</label>
-                    <p className="mt-1 text-sm text-gray-900">{player.gold.toLocaleString()} G</p>
+                    <p className="mt-1 text-sm text-gray-900">{character.gold.toLocaleString()} G</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">作成日時</label>
-                    <p className="mt-1 text-sm text-gray-900">{formatDate(player.created_at)}</p>
+                    <p className="mt-1 text-sm text-gray-900">{formatDate(character.created_at)}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">最終ログイン</label>
-                    <p className="mt-1 text-sm text-gray-900">{formatDate(player.last_login_at)}</p>
+                    <p className="mt-1 text-sm text-gray-900">{formatDate(character.last_login_at)}</p>
                   </div>
                 </div>
 
-                {player.job_classes.length > 0 && (
+                {character.job_classes.length > 0 && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">習得職業</label>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {player.job_classes.map((jobClass) => (
+                      {character.job_classes.map((jobClass) => (
                         <div key={jobClass.id} className="border border-gray-200 rounded p-3">
                           <div className="flex justify-between items-center mb-2">
                             <h4 className="font-medium">{jobClass.name}</h4>

@@ -12,7 +12,7 @@ interface User {
   email: string
   created_at: string
   last_login_at?: string
-  player_count: number
+  character_count: number
   is_active: boolean
 }
 
@@ -100,8 +100,8 @@ export default function UsersPage() {
                           <span className="ml-1 font-medium">{user.email}</span>
                         </div>
                         <div>
-                          <span className="text-gray-500">プレイヤー数:</span>
-                          <span className="ml-1 font-medium">{user.player_count}</span>
+                          <span className="text-gray-500">キャラクター数:</span>
+                          <span className="ml-1 font-medium">{user.character_count}</span>
                         </div>
                         <div>
                           <span className="text-gray-500">最終ログイン:</span>

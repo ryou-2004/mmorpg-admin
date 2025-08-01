@@ -7,7 +7,7 @@ import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
 
-interface PlayerItem {
+interface CharacterItem {
   id: number
   quantity: number
   equipped: boolean
@@ -42,11 +42,11 @@ interface PlayerItem {
 }
 
 interface EquipmentData {
-  data: PlayerItem[]
+  data: CharacterItem[]
   meta: {
     location: string
     total_count: number
-    player: {
+    character: {
       id: number
       name: string
     }
@@ -55,22 +55,22 @@ interface EquipmentData {
 
 export default function PlayerEquipmentPage() {
   const params = useParams()
-  const playerId = params.id as string
+  const characterId = params.id as string
   
   const [equipmentData, setEquipmentData] = useState<EquipmentData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (playerId) {
+    if (characterId) {
       fetchEquipmentData()
     }
-  }, [playerId])
+  }, [characterId])
 
   const fetchEquipmentData = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get<EquipmentData>(`/admin/players/${playerId}/player_items?location=equipped`)
+      const response = await apiClient.get<EquipmentData>(`/admin/characters/${characterId}/character_items?location=equipped`)
       setEquipmentData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : '装備データの取得に失敗しました')
@@ -118,7 +118,7 @@ export default function PlayerEquipmentPage() {
   if (loading) {
     return (
       <AuthGuard>
-        <AdminLayout title="装備管理" showBackButton backHref={`/players/${playerId}`}>
+        <AdminLayout title="装備管理" showBackButton backHref={`/characters/${characterId}`}>
           <div className="flex justify-center items-center h-64">
             <div className="text-lg">読み込み中...</div>
           </div>
@@ -130,7 +130,7 @@ export default function PlayerEquipmentPage() {
   if (error || !equipmentData) {
     return (
       <AuthGuard>
-        <AdminLayout title="装備管理" showBackButton backHref={`/players/${playerId}`}>
+        <AdminLayout title="装備管理" showBackButton backHref={`/characters/${characterId}`}>
           <div className="bg-red-50 border border-red-200 rounded-md p-4">
             <div className="text-red-700">エラー: {error || 'データが見つかりません'}</div>
             <button
@@ -155,7 +155,7 @@ export default function PlayerEquipmentPage() {
 
   return (
     <AuthGuard>
-      <AdminLayout title={`${equipmentData.meta.player.name}の装備管理`} showBackButton backHref={`/players/${playerId}`}>
+      <AdminLayout title={`${equipmentData.meta.character.name}の装備管理`} showBackButton backHref={`/characters/${characterId}`}>
         <div className="space-y-6">
           {/* ヘッダー情報 */}
           <div className="bg-white shadow rounded-lg p-6">
@@ -163,19 +163,19 @@ export default function PlayerEquipmentPage() {
               <div>
                 <h3 className="text-lg font-medium text-gray-900">装備管理</h3>
                 <p className="text-sm text-gray-500">
-                  プレイヤー: {equipmentData.meta.player.name} | 
+                  キャラクター: {equipmentData.meta.character.name} | 
                   装備数: {equipmentData.meta.total_count}個
                 </p>
               </div>
               <div className="flex space-x-2">
                 <Link
-                  href={`/players/${playerId}/inventory`}
+                  href={`/characters/${characterId}/inventory`}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm"
                 >
                   インベントリへ
                 </Link>
                 <Link
-                  href={`/players/${playerId}/warehouse`}
+                  href={`/characters/${characterId}/warehouse`}
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
                 >
                   倉庫へ
@@ -207,13 +207,13 @@ export default function PlayerEquipmentPage() {
                   </div>
                   
                   <div className="divide-y divide-gray-200">
-                    {items.map((playerItem) => (
-                      <div key={playerItem.id} className="p-6 hover:bg-gray-50">
+                    {items.map((characterItem) => (
+                      <div key={characterItem.id} className="p-6 hover:bg-gray-50">
                         <div className="flex items-center space-x-4">
                           {/* アイテムアイコン */}
                           <div className="flex-shrink-0">
                             <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-2xl">
-                              {getItemTypeIcon(playerItem.item.item_type)}
+                              {getItemTypeIcon(characterItem.item.item_type)}
                             </div>
                           </div>
                           
@@ -221,13 +221,13 @@ export default function PlayerEquipmentPage() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-2">
                               <span className="text-lg font-medium text-gray-900">
-                                {playerItem.item.name}
+                                {characterItem.item.name}
                               </span>
-                              <span className="text-lg">{getRarityIcon(playerItem.item.rarity)}</span>
+                              <span className="text-lg">{getRarityIcon(characterItem.item.rarity)}</span>
                               <span className="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
                                 ✓ 装備中
                               </span>
-                              {playerItem.locked && (
+                              {characterItem.locked && (
                                 <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
                                   🔒 ロック中
                                 </span>
@@ -235,41 +235,41 @@ export default function PlayerEquipmentPage() {
                             </div>
                             
                             <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
-                              <span>レアリティ: {playerItem.item.rarity}</span>
-                              {playerItem.item.level_requirement > 0 && (
-                                <span>必要レベル: {playerItem.item.level_requirement}</span>
+                              <span>レアリティ: {characterItem.item.rarity}</span>
+                              {characterItem.item.level_requirement > 0 && (
+                                <span>必要レベル: {characterItem.item.level_requirement}</span>
                               )}
-                              <span>装備日: {new Date(playerItem.obtained_at).toLocaleDateString('ja-JP')}</span>
+                              <span>装備日: {new Date(characterItem.obtained_at).toLocaleDateString('ja-JP')}</span>
                             </div>
                             
-                            {playerItem.item.description && (
+                            {characterItem.item.description && (
                               <div className="mt-2 text-sm text-gray-600">
-                                {playerItem.item.description}
+                                {characterItem.item.description}
                               </div>
                             )}
                             
                             {/* ステータス情報 */}
                             <div className="mt-2 flex items-center space-x-4 text-sm">
-                              <span className={`font-medium ${playerItem.status_color}`}>
-                                {playerItem.display_status}
+                              <span className={`font-medium ${characterItem.status_color}`}>
+                                {characterItem.display_status}
                               </span>
-                              <span className={`font-medium ${getDurabilityColor(playerItem.durability, playerItem.max_durability)}`}>
-                                耐久: {playerItem.durability}/{playerItem.max_durability}
-                                {playerItem.durability < playerItem.max_durability && ' ⚠️'}
+                              <span className={`font-medium ${getDurabilityColor(characterItem.durability, characterItem.max_durability)}`}>
+                                耐久: {characterItem.durability}/{characterItem.max_durability}
+                                {characterItem.durability < characterItem.max_durability && ' ⚠️'}
                               </span>
-                              {playerItem.enchantment_level > 0 && (
+                              {characterItem.enchantment_level > 0 && (
                                 <span className="text-purple-600 font-medium">
-                                  強化: +{playerItem.enchantment_level} ✨
+                                  強化: +{characterItem.enchantment_level} ✨
                                 </span>
                               )}
                             </div>
 
                             {/* アイテム効果 */}
-                            {playerItem.item.effects && Object.keys(playerItem.item.effects).length > 0 && (
+                            {characterItem.item.effects && Object.keys(characterItem.item.effects).length > 0 && (
                               <div className="mt-2 p-2 bg-blue-50 rounded">
                                 <div className="text-xs text-blue-700 font-medium mb-1">効果:</div>
                                 <div className="text-xs text-blue-600">
-                                  {JSON.stringify(playerItem.item.effects, null, 2)}
+                                  {JSON.stringify(characterItem.item.effects, null, 2)}
                                 </div>
                               </div>
                             )}
@@ -277,13 +277,13 @@ export default function PlayerEquipmentPage() {
                           
                           {/* アクションボタン */}
                           <div className="flex-shrink-0 flex space-x-2">
-                            {playerItem.can_move && (
+                            {characterItem.can_move && (
                               <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-1 px-3 rounded text-sm">
                                 装備解除
                               </button>
                             )}
                             <Link
-                              href={`/players/${playerId}/items/${playerItem.id}`}
+                              href={`/characters/${characterId}/items/${characterItem.id}`}
                               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-3 rounded text-sm"
                             >
                               詳細
