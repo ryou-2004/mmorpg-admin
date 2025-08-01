@@ -15,6 +15,14 @@ interface JobClass {
   unlocked_at: string
 }
 
+interface CurrentJob {
+  id: number
+  name: string
+  job_type: string
+  level: number
+  experience: number
+}
+
 interface Character {
   id: number
   name: string
@@ -22,6 +30,7 @@ interface Character {
   active: boolean
   created_at: string
   last_login_at: string | null
+  current_job: CurrentJob | null
   job_classes: JobClass[]
 }
 
@@ -191,28 +200,28 @@ export default function UserDetail() {
                   </div>
                 </div>
 
-                {character.job_classes.length > 0 && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">習得職業</label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {character.job_classes.map((jobClass) => (
-                        <div key={jobClass.id} className="border border-gray-200 rounded p-3">
-                          <div className="flex justify-between items-center mb-2">
-                            <h4 className="font-medium">{jobClass.name}</h4>
-                            <span className={`px-2 py-1 text-xs rounded ${getJobTypeColor(jobClass.job_type)}`}>
-                              {getJobTypeName(jobClass.job_type)}
-                            </span>
-                          </div>
-                          <div className="text-sm text-gray-600 space-y-1">
-                            <p>レベル: {jobClass.level}</p>
-                            <p>経験値: {jobClass.experience.toLocaleString()}</p>
-                            <p>習得日: {formatDate(jobClass.unlocked_at)}</p>
-                          </div>
-                        </div>
-                      ))}
+                {/* 現在の職業 */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">現在の職業</label>
+                  {character.current_job ? (
+                    <div className="border border-blue-200 bg-blue-50 rounded-lg p-4 max-w-sm">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-semibold text-lg text-blue-900">{character.current_job.name}</h4>
+                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${getJobTypeColor(character.current_job.job_type)}`}>
+                          {getJobTypeName(character.current_job.job_type)}
+                        </span>
+                      </div>
+                      <div className="text-sm text-blue-800 space-y-1">
+                        <p className="font-medium">レベル: {character.current_job.level}</p>
+                        <p>経験値: {character.current_job.experience.toLocaleString()}</p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <div className="border border-gray-200 rounded-lg p-4 max-w-sm">
+                      <p className="text-gray-500">職業が設定されていません</p>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
