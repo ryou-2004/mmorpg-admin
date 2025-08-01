@@ -38,11 +38,6 @@ interface CharacterJobClass {
     agility: number
     luck: number
   }
-  same_job_rankings: Array<{
-    character_name: string
-    level: number
-    experience: number
-  }>
   level_history: Array<{
     level: number
     hp: number
@@ -238,34 +233,6 @@ export default function CharacterJobClassDetailPage() {
             </div>
           </div>
 
-          {/* 同職業ランキング */}
-          {characterJobClass.same_job_rankings.length > 0 && (
-            <div className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">同職業ランキング（上位5名）</h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">順位</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">キャラクター名</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レベル</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">経験値</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {characterJobClass.same_job_rankings.map((ranking, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ranking.character_name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ranking.level}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ranking.experience.toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
 
           {/* レベル別ステータス履歴 */}
           {characterJobClass.level_history.length > 0 && (
