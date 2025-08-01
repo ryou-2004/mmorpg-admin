@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
@@ -113,7 +114,11 @@ export default function JobClassesPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.isArray(jobClasses) && jobClasses.map((jobClass) => (
-                <div key={jobClass.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <Link 
+                  key={jobClass.id} 
+                  href={`/job-classes/${jobClass.id}`}
+                  className="block border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer"
+                >
                   <div className="flex justify-between items-start mb-2">
                     <h4 className="text-lg font-medium text-gray-900">{jobClass.name}</h4>
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getJobTypeColor(jobClass.job_type)}`}>
@@ -145,7 +150,8 @@ export default function JobClassesPage() {
                   <div className="mt-3 text-xs text-gray-400">
                     作成日: {new Date(jobClass.created_at).toLocaleDateString('ja-JP')}
                   </div>
-                </div>
+                  
+                </Link>
               ))}
             </div>
           </div>
