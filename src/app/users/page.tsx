@@ -1,7 +1,7 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
@@ -17,7 +17,6 @@ interface User {
 }
 
 export default function UsersPage() {
-  const router = useRouter()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -85,50 +84,62 @@ export default function UsersPage() {
               </button>
             </div>
             
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ユーザー名</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">メール</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">プレイヤー数</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">最終ログイン</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作成日</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {users.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
-                        <button
-                          onClick={() => router.push(`/users/${user.id}`)}
-                          className="hover:underline"
-                        >
-                          {user.username}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.player_count}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.last_login_at ? new Date(user.last_login_at).toLocaleString('ja-JP') : 'なし'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(user.created_at).toLocaleString('ja-JP')}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {users.map((user) => (
+                <div key={user.id} className="relative">
+                  <Link href={`/users/${user.id}`} className="block">
+                    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer">
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="text-lg font-medium text-gray-900">{user.username}</h4>
+                        <span className="text-sm text-gray-500">ID: {user.id}</span>
+                      </div>
+                      
+                      <div className="space-y-1 text-sm">
+                        <div>
+                          <span className="text-gray-500">メール:</span>
+                          <span className="ml-1 font-medium">{user.email}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">プレイヤー数:</span>
+                          <span className="ml-1 font-medium">{user.player_count}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">最終ログイン:</span>
+                          <span className="ml-1 font-medium">
+                            {user.last_login_at ? 
+                              new Date(user.last_login_at).toLocaleDateString('ja-JP') : 
+                              'なし'
+                            }
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">作成日:</span>
+                          <span className="ml-1 font-medium">
+                            {new Date(user.created_at).toLocaleDateString('ja-JP')}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 flex justify-end">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }`}>
                           {user.is_active ? 'アクティブ' : '無効'}
                         </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="absolute top-2 right-2 z-10">
+                    <Link
+                      href={`/users/${user.id}/edit`}
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      編集
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
