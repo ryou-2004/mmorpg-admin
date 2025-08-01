@@ -10,32 +10,8 @@ interface Player {
   id: number
   name: string
   gold: number
-  active: boolean
-  created_at: string
-  last_login_at?: string
-  current_job?: {
-    job_name: string
-    level: number
-    experience: number
-    skill_points: number
-    stats: {
-      hp: number
-      max_hp: number
-      mp: number
-      max_mp: number
-      attack: number
-      defense: number
-      magic_attack: number
-      magic_defense: number
-      agility: number
-      luck: number
-    }
-  }
-  user: {
-    id: number
-    name: string
-    email: string
-  }
+  current_job_name: string
+  current_job_level: number
 }
 
 export default function PlayersPage() {
@@ -111,13 +87,10 @@ export default function PlayersPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">プレイヤー名</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ユーザー</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職業</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職業名</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レベル</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">プレイヤー名</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ゴールド</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">最終ログイン</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                   </tr>
                 </thead>
@@ -125,25 +98,14 @@ export default function PlayersPage() {
                   {players.map((player) => (
                     <tr key={player.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{player.id}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.current_job_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.current_job_level}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
                         <Link href={`/players/${player.id}`} className="hover:underline">
                           {player.name}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.user.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.current_job?.job_name || '未設定'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.current_job?.level || '-'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{player.gold.toLocaleString()} G</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {player.last_login_at ? new Date(player.last_login_at).toLocaleString('ja-JP') : '未ログイン'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          player.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
-                          {player.active ? 'アクティブ' : '無効'}
-                        </span>
-                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex space-x-2">
                           <Link
