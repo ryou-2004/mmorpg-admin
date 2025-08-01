@@ -102,10 +102,8 @@ export default function CharactersPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{character.id}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{character.current_job_name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{character.current_job_level}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600 hover:text-blue-800">
-                        <Link href={`/characters/${character.id}`} className="hover:underline">
-                          {character.name}
-                        </Link>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {character.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{character.gold.toLocaleString()} G</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
