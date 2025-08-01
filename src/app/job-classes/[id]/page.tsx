@@ -277,14 +277,15 @@ export default function JobClassDetailPage() {
             </div>
           </div>
 
-          {/* トップキャラクター */}
+          {/* 同職業ランキング */}
           {jobClass.top_characters.length > 0 && (
             <div className="bg-white shadow rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">トップキャラクター</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">同職業ランキング（上位10名）</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">順位</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">キャラクター名</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レベル</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">経験値</th>
@@ -296,7 +297,13 @@ export default function JobClassDetailPage() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {jobClass.top_characters.map((character, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={index} className={index < 3 ? 'bg-yellow-50' : 'hover:bg-gray-50'}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {index + 1}
+                          {index === 0 && <span className="ml-2 text-yellow-500">👑</span>}
+                          {index === 1 && <span className="ml-2 text-gray-400">🥈</span>}
+                          {index === 2 && <span className="ml-2 text-orange-500">🥉</span>}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{character.character_name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{character.level}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{character.experience.toLocaleString()}</td>
