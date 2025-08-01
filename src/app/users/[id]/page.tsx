@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
@@ -172,10 +173,14 @@ export default function UserDetail() {
         ) : (
           <div className="space-y-6">
             {user.characters.map((character) => (
-              <div key={character.id} className="border border-gray-200 rounded-lg p-4">
+              <Link 
+                key={character.id} 
+                href={`/characters/${character.id}`}
+                className="block border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-blue-300 transition-all cursor-pointer"
+              >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-medium">{character.name}</h3>
+                    <h3 className="text-lg font-medium text-blue-600 hover:text-blue-800">{character.name}</h3>
                     <p className="text-sm text-gray-500">ID: {character.id}</p>
                   </div>
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -222,7 +227,7 @@ export default function UserDetail() {
                     </div>
                   )}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
