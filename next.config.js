@@ -8,6 +8,8 @@ const nextConfig = {
       },
     ]
   },
+  // React Strict Mode無効化（開発時のuseEffect重複実行防止）
+  reactStrictMode: false,
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {
       // WSL環境での最適化
