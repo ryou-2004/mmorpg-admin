@@ -263,7 +263,11 @@ export default function CharacterDetailPage() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {character.job_classes.map((job) => (
-                    <div key={job.id} className="bg-gray-50 p-4 rounded-lg">
+                    <Link
+                      key={job.id}
+                      href={`/characters/${character.id}/job-classes/${job.id}`}
+                      className="block bg-gray-50 p-4 rounded-lg hover:shadow-md hover:border-blue-300 border border-transparent transition-all cursor-pointer"
+                    >
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-semibold text-gray-900">{job.job_class.name}</span>
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -281,7 +285,7 @@ export default function CharacterDetailPage() {
                         <div>スキルポイント: {job.skill_points}</div>
                         <div>習得日: {new Date(job.unlocked_at).toLocaleDateString('ja-JP')}</div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
