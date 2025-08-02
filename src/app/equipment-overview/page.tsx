@@ -115,10 +115,15 @@ export default function EquipmentOverviewPage() {
 
   const getEquipmentSlotIcon = (slot: string) => {
     switch (slot) {
-      case 'weapon': return '⚔️'
-      case 'armor': return '🛡️'
-      case 'accessory_1': return '💍'
-      case 'accessory_2': return '💎'
+      case '右手': return '⚔️'
+      case '左手': return '🛡️'
+      case '頭': return '🎩'
+      case '胴': return '👔'
+      case '腰': return '🎀'
+      case '腕': return '🧤'
+      case '足': return '👢'
+      case '指輪': return '💍'
+      case '首飾り': return '📿'
       default: return '📦'
     }
   }
