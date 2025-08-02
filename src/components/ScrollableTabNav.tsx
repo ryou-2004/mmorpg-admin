@@ -16,6 +16,7 @@ const DEFAULT_TABS: TabItem[] = [
   { id: 'dashboard', label: 'ダッシュボード', href: '/dashboard', visible: true },
   { id: 'users', label: 'ユーザー管理', href: '/users', visible: true },
   { id: 'characters', label: 'キャラクター管理', href: '/characters', visible: true },
+  { id: 'equipment-overview', label: '装備状況一覧', href: '/equipment-overview', visible: true },
   { id: 'job-classes', label: '職業管理', href: '/job-classes', visible: true },
   { id: 'job-stats', label: '職業統計', href: '/job-stats', visible: true },
   { id: 'items', label: 'アイテム管理', href: '/items', visible: true },
