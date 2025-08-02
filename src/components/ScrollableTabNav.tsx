@@ -40,7 +40,7 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
     if (typeof window !== 'undefined') {
       const savedTabs = localStorage.getItem('admin-tabs')
       const savedVersion = localStorage.getItem('admin-tabs-version')
-      const currentVersion = '1.1' // 装備状況一覧追加版
+      const currentVersion = '1.3' // 装備状況一覧パス再変更版
       
       if (savedTabs && savedVersion === currentVersion) {
         try {

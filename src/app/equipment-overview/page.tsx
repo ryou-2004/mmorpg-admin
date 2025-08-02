@@ -73,7 +73,7 @@ export default function EquipmentOverviewPage() {
         if (value) params.append(key, value)
       })
       
-      const response = await apiClient.get<EquipmentOverviewData>(`/admin/equipment_overview?${params}`)
+      const response = await apiClient.get<EquipmentOverviewData>(`/admin/characters/equipments?${params}`)
       setData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : '装備状況データの取得に失敗しました')
