@@ -60,6 +60,9 @@ export default function CharacterInventoryPage() {
   const [inventoryData, setInventoryData] = useState<InventoryData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [actionLoading, setActionLoading] = useState<number | null>(null)
+  const [warehouses, setWarehouses] = useState<{id: number, name: string}[]>([])
+  const [selectedWarehouse, setSelectedWarehouse] = useState<number | null>(null)
 
   useEffect(() => {
     if (characterId) {
@@ -70,12 +73,73 @@ export default function CharacterInventoryPage() {
   const fetchInventoryData = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get<InventoryData>(`/admin/characters/${characterId}/character_items?location=inventory`)
+      
+      // キャラクター情報から倉庫一覧を取得
+      const characterResponse = await apiClient.get(`/admin/characters/${characterId}?test=true`)
+      const characterData = characterResponse as any
+      setWarehouses(characterData.warehouses || [])
+      if (characterData.warehouses && characterData.warehouses.length > 0) {
+        setSelectedWarehouse(characterData.warehouses[0].id)
+      }
+      
+      // インベントリデータを取得
+      const response = await apiClient.get<InventoryData>(`/admin/characters/${characterId}/character_items?location=inventory&test=true`)
       setInventoryData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'インベントリデータの取得に失敗しました')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleEquipItem = async (characterItemId: number) => {
+    try {
+      setActionLoading(characterItemId)
+      // 装備ページにリダイレクト
+      window.location.href = `/characters/${characterId}/equipment`
+    } catch (err) {
+      alert(err instanceof Error ? err.message : '装備に失敗しました')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleMoveToWarehouse = async (characterItemId: number) => {
+    if (!selectedWarehouse) {
+      alert('移動先の倉庫を選択してください')
+      return
+    }
+
+    try {
+      setActionLoading(characterItemId)
+      await apiClient.patch(`/admin/characters/${characterId}/character_items/${characterItemId}/move_to_warehouse?test=true`, {
+        warehouse_id: selectedWarehouse
+      })
+      await fetchInventoryData() // データを再取得
+      alert('アイテムを倉庫に移動しました')
+    } catch (err) {
+      alert(err instanceof Error ? err.message : '倉庫への移動に失敗しました')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleUseItem = async (characterItemId: number) => {
+    if (!confirm('このアイテムを使用しますか？')) {
+      return
+    }
+
+    try {
+      setActionLoading(characterItemId)
+      const response = await apiClient.patch(`/admin/characters/${characterId}/character_items/${characterItemId}/use_item?test=true`)
+      await fetchInventoryData() // データを再取得
+      
+      const result = response as any
+      alert(`${result.message}\n効果: ${result.effects.join(', ')}`)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'アイテムの使用に失敗しました')
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -142,19 +206,37 @@ export default function CharacterInventoryPage() {
                   アイテム数: {inventoryData.meta.total_count}個
                 </p>
               </div>
-              <div className="flex space-x-2">
-                <Link
-                  href={`/characters/${characterId}/warehouse`}
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
-                >
-                  倉庫へ
-                </Link>
-                <Link
-                  href={`/characters/${characterId}/equipment`}
-                  className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-sm"
-                >
-                  装備へ
-                </Link>
+              <div className="flex items-center space-x-4">
+                {warehouses.length > 0 && (
+                  <div className="flex items-center space-x-2">
+                    <label className="text-sm font-medium text-gray-700">移動先倉庫:</label>
+                    <select
+                      value={selectedWarehouse || ''}
+                      onChange={(e) => setSelectedWarehouse(parseInt(e.target.value))}
+                      className="border border-gray-300 rounded px-2 py-1 text-sm"
+                    >
+                      {warehouses.map((warehouse) => (
+                        <option key={warehouse.id} value={warehouse.id}>
+                          {warehouse.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <div className="flex space-x-2">
+                  <Link
+                    href={`/characters/${characterId}/warehouse`}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm"
+                  >
+                    倉庫へ
+                  </Link>
+                  <Link
+                    href={`/characters/${characterId}/equipment`}
+                    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-sm"
+                  >
+                    装備へ
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -240,18 +322,30 @@ export default function CharacterInventoryPage() {
                       {/* アクションボタン */}
                       <div className="flex-shrink-0 flex space-x-2">
                         {characterItem.can_equip && (
-                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm">
+                          <button 
+                            onClick={() => handleEquipItem(characterItem.id)}
+                            disabled={actionLoading === characterItem.id}
+                            className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
                             装備
                           </button>
                         )}
-                        {characterItem.can_move && (
-                          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm">
-                            倉庫へ
+                        {characterItem.can_move && warehouses.length > 0 && (
+                          <button 
+                            onClick={() => handleMoveToWarehouse(characterItem.id)}
+                            disabled={actionLoading === characterItem.id || !selectedWarehouse}
+                            className="bg-green-500 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
+                            {actionLoading === characterItem.id ? '処理中...' : '倉庫へ'}
                           </button>
                         )}
                         {characterItem.can_use && characterItem.item.item_type === 'consumable' && (
-                          <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded text-sm">
-                            使用
+                          <button 
+                            onClick={() => handleUseItem(characterItem.id)}
+                            disabled={actionLoading === characterItem.id}
+                            className="bg-yellow-500 hover:bg-yellow-700 disabled:bg-gray-400 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
+                            {actionLoading === characterItem.id ? '処理中...' : '使用'}
                           </button>
                         )}
                         <Link

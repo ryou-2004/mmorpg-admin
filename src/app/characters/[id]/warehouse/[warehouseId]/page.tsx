@@ -70,6 +70,7 @@ export default function WarehouseDetailPage() {
   const [warehouse, setWarehouse] = useState<Warehouse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [actionLoading, setActionLoading] = useState<number | null>(null)
 
   useEffect(() => {
     if (characterId && warehouseId) {
@@ -82,18 +83,62 @@ export default function WarehouseDetailPage() {
       setLoading(true)
       
       // プレイヤー情報から倉庫情報を取得
-      const playerResponse = await apiClient.get(`/admin/characters/${characterId}`)
+      const playerResponse = await apiClient.get(`/admin/characters/${characterId}?test=true`)
       const playerData = playerResponse as any
       const warehouseInfo = playerData.warehouses.find((w: Warehouse) => w.id === parseInt(warehouseId))
       setWarehouse(warehouseInfo)
       
       // 倉庫のアイテム情報を取得
-      const warehouseResponse = await apiClient.get<WarehouseData>(`/admin/characters/${characterId}/character_items?location=warehouse&warehouse_id=${warehouseId}`)
+      const warehouseResponse = await apiClient.get<WarehouseData>(`/admin/characters/${characterId}/character_items?location=warehouse&warehouse_id=${warehouseId}&test=true`)
       setWarehouseData(warehouseResponse)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'データの取得に失敗しました')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleMoveToInventory = async (characterItemId: number) => {
+    try {
+      setActionLoading(characterItemId)
+      await apiClient.patch(`/admin/characters/${characterId}/character_items/${characterItemId}/move_to_inventory?test=true`)
+      await fetchData() // データを再取得
+      alert('アイテムをインベントリに移動しました')
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'インベントリへの移動に失敗しました')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleEquipItem = async (characterItemId: number) => {
+    try {
+      setActionLoading(characterItemId)
+      // 装備ページにリダイレクト
+      window.location.href = `/characters/${characterId}/equipment`
+    } catch (err) {
+      alert(err instanceof Error ? err.message : '装備に失敗しました')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleUseItem = async (characterItemId: number) => {
+    if (!confirm('このアイテムを使用しますか？')) {
+      return
+    }
+
+    try {
+      setActionLoading(characterItemId)
+      const response = await apiClient.patch(`/admin/characters/${characterId}/character_items/${characterItemId}/use_item?test=true`)
+      await fetchData() // データを再取得
+      
+      const result = response as any
+      alert(`${result.message}\n効果: ${result.effects.join(', ')}`)
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'アイテムの使用に失敗しました')
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -272,18 +317,30 @@ export default function WarehouseDetailPage() {
                       {/* アクションボタン */}
                       <div className="flex-shrink-0 flex space-x-2">
                         {characterItem.can_move && (
-                          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm">
-                            インベントリへ
+                          <button 
+                            onClick={() => handleMoveToInventory(characterItem.id)}
+                            disabled={actionLoading === characterItem.id}
+                            className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
+                            {actionLoading === characterItem.id ? '処理中...' : 'インベントリへ'}
                           </button>
                         )}
                         {characterItem.can_equip && (
-                          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm">
+                          <button 
+                            onClick={() => handleEquipItem(characterItem.id)}
+                            disabled={actionLoading === characterItem.id}
+                            className="bg-green-500 hover:bg-green-700 disabled:bg-gray-400 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
                             装備
                           </button>
                         )}
                         {characterItem.can_use && characterItem.item.item_type === 'consumable' && (
-                          <button className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded text-sm">
-                            使用
+                          <button 
+                            onClick={() => handleUseItem(characterItem.id)}
+                            disabled={actionLoading === characterItem.id}
+                            className="bg-yellow-500 hover:bg-yellow-700 disabled:bg-gray-400 text-white font-bold py-1 px-3 rounded text-sm"
+                          >
+                            {actionLoading === characterItem.id ? '処理中...' : '使用'}
                           </button>
                         )}
                         <Link

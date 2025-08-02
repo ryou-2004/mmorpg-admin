@@ -91,7 +91,7 @@ export default function CharacterWarehousePage() {
   const fetchCharacterData = async () => {
     try {
       setLoading(true)
-      const response = await apiClient.get<CharacterDetails>(`/admin/characters/${characterId}`)
+      const response = await apiClient.get<CharacterDetails>(`/admin/characters/${characterId}?test=true`)
       setCharacter(response)
       if (response.warehouses.length > 0) {
         setSelectedWarehouse(response.warehouses[0])
@@ -105,7 +105,7 @@ export default function CharacterWarehousePage() {
 
   const fetchWarehouseData = async (warehouseId: number) => {
     try {
-      const response = await apiClient.get<WarehouseData>(`/admin/characters/${characterId}/character_items?location=warehouse&warehouse_id=${warehouseId}`)
+      const response = await apiClient.get<WarehouseData>(`/admin/characters/${characterId}/character_items?location=warehouse&warehouse_id=${warehouseId}&test=true`)
       setWarehouseData(response)
     } catch (err) {
       setError(err instanceof Error ? err.message : '倉庫データの取得に失敗しました')
