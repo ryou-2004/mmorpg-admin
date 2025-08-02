@@ -18,11 +18,8 @@ interface EquippedItem {
 interface Character {
   id: number
   name: string
-  user: {
-    id: number
-    name: string
-  }
   current_job: {
+    id: number
     name: string
     level: number
   } | null
@@ -31,15 +28,20 @@ interface Character {
   empty_slots: number
 }
 
+interface JobClass {
+  id: number
+  name: string
+}
+
 interface EquipmentOverviewData {
   data: Character[]
   meta: {
     total_characters: number
     equipment_slots: { [key: string]: string }
+    available_job_classes: JobClass[]
     filters: {
-      user_name?: string
       character_name?: string
-      job_class?: string
+      job_class_id?: string
       missing_equipment?: string
     }
   }
@@ -52,9 +54,8 @@ export default function EquipmentOverviewPage() {
   
   // フィルター状態
   const [filters, setFilters] = useState({
-    user_name: '',
     character_name: '',
-    job_class: '',
+    job_class_id: '',
     missing_equipment: ''
   })
 
@@ -94,9 +95,8 @@ export default function EquipmentOverviewPage() {
 
   const clearFilters = () => {
     setFilters({
-      user_name: '',
       character_name: '',
-      job_class: '',
+      job_class_id: '',
       missing_equipment: ''
     })
     setTimeout(() => fetchData(), 100)
@@ -165,17 +165,7 @@ export default function EquipmentOverviewPage() {
           {/* フィルター */}
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">フィルター</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">ユーザー名</label>
-                <input
-                  type="text"
-                  value={filters.user_name}
-                  onChange={(e) => handleFilterChange('user_name', e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                  placeholder="ユーザー名で検索"
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">キャラクター名</label>
                 <input
@@ -188,13 +178,18 @@ export default function EquipmentOverviewPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">職業</label>
-                <input
-                  type="text"
-                  value={filters.job_class}
-                  onChange={(e) => handleFilterChange('job_class', e.target.value)}
+                <select
+                  value={filters.job_class_id}
+                  onChange={(e) => handleFilterChange('job_class_id', e.target.value)}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                  placeholder="職業名で検索"
-                />
+                >
+                  <option value="">すべての職業</option>
+                  {data?.meta.available_job_classes.map(jobClass => (
+                    <option key={jobClass.id} value={jobClass.id.toString()}>
+                      {jobClass.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">装備なしスロット</label>
@@ -263,9 +258,6 @@ export default function EquipmentOverviewPage() {
                       キャラクター
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      ユーザー
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       職業・レベル
                     </th>
                     {Object.entries(data.meta.equipment_slots).map(([slot, name]) => (
@@ -287,9 +279,6 @@ export default function EquipmentOverviewPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="font-medium text-gray-900">{character.name}</div>
                         <div className="text-sm text-gray-500">ID: {character.id}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{character.user.name}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {character.current_job ? (
