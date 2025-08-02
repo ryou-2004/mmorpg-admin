@@ -48,6 +48,11 @@ interface EquipmentData {
   available_items: CharacterItem[]
 }
 
+interface EquipmentResponse {
+  total_stats: { [key: string]: number }
+  equipped_items: { [key: string]: CharacterItem | null }
+}
+
 export default function CharacterEquipmentPage() {
   const params = useParams()
   const characterId = params.id as string
@@ -76,7 +81,7 @@ export default function CharacterEquipmentPage() {
 
   const handleEquip = async (characterItemId: number, slot: string) => {
     try {
-      const response = await apiClient.post(`/admin/characters/${characterId}/equipment/equip?test=true`, {
+      const response = await apiClient.post<EquipmentResponse>(`/admin/characters/${characterId}/equipment/equip?test=true`, {
         character_item_id: characterItemId,
         slot: slot
       })
@@ -97,7 +102,7 @@ export default function CharacterEquipmentPage() {
 
   const handleUnequip = async (characterItemId: number) => {
     try {
-      const response = await apiClient.post(`/admin/characters/${characterId}/equipment/unequip?test=true`, {
+      const response = await apiClient.post<EquipmentResponse>(`/admin/characters/${characterId}/equipment/unequip?test=true`, {
         character_item_id: characterItemId
       })
       
@@ -255,7 +260,7 @@ export default function CharacterEquipmentPage() {
                               <div key={idx}>
                                 {effect.stats && Object.entries(effect.stats).map(([stat, value]) => (
                                   <span key={stat} className="text-green-600">
-                                    {stat}: +{value} 
+                                    {stat}: +{String(value)} 
                                   </span>
                                 ))}
                               </div>
@@ -388,7 +393,7 @@ export default function CharacterEquipmentPage() {
                                   {characterItem.item.effects.map((effect: any, idx: number) => (
                                     <span key={idx}>
                                       {effect.stats && Object.entries(effect.stats).map(([stat, value]) => (
-                                        <span key={stat}>{stat}: +{value} </span>
+                                        <span key={stat}>{stat}: +{String(value)} </span>
                                       ))}
                                     </span>
                                   ))}

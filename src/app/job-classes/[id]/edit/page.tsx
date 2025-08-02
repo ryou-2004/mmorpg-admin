@@ -152,7 +152,7 @@ export default function EditJobClassPage() {
     }
   }
 
-  const handleInputChange = (field: keyof JobClassFormData, value: string | number) => {
+  const handleInputChange = (field: keyof JobClassFormData, value: string | number | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value

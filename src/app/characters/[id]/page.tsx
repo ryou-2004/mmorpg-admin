@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
+import ExperienceDisplay from '@/components/ExperienceDisplay'
+import ExperienceAdjustmentForm from '@/components/ExperienceAdjustmentForm'
 
 interface CharacterDetails {
   id: number
@@ -24,10 +26,14 @@ interface CharacterDetails {
     level: number
     experience: number
     skill_points: number
+    exp_to_next_level: number
+    level_progress: number
+    max_level_reached: boolean
     job_class: {
       id: number
       name: string
       job_type: string
+      max_level: number
     }
   }
   job_classes: Array<{
@@ -41,7 +47,22 @@ interface CharacterDetails {
     level: number
     experience: number
     skill_points: number
+    exp_to_next_level: number
+    level_progress: number
     unlocked_at: string
+    is_current: boolean
+    stats: {
+      hp: number
+      max_hp: number
+      mp: number
+      max_mp: number
+      attack: number
+      defense: number
+      magic_attack: number
+      magic_defense: number
+      agility: number
+      luck: number
+    }
   }>
   warehouses: Array<{
     id: number
@@ -169,22 +190,37 @@ export default function CharacterDetailPage() {
             <div className="bg-white shadow rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">現在の職業</h3>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">職業名</label>
-                    <div className="mt-1 text-sm text-gray-900">{character.current_job_class.job_class.name}</div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">職業名</label>
+                        <div className="mt-1 text-lg font-semibold text-gray-900">{character.current_job_class.job_class.name}</div>
+                        <div className="text-sm text-gray-500">{character.current_job_class.job_class.job_type}</div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">スキルポイント</label>
+                        <div className="mt-1 text-lg font-semibold text-orange-600">{character.current_job_class.skill_points}</div>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">レベル</label>
-                    <div className="mt-1 text-sm text-gray-900">Lv.{character.current_job_class.level}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">経験値</label>
-                    <div className="mt-1 text-sm text-gray-900">{character.current_job_class.experience.toLocaleString()}</div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">スキルポイント</label>
-                    <div className="mt-1 text-sm text-gray-900">{character.current_job_class.skill_points}</div>
+                  <div className="space-y-4">
+                    <ExperienceDisplay
+                      level={character.current_job_class.level}
+                      experience={character.current_job_class.experience}
+                      expToNextLevel={character.current_job_class.exp_to_next_level}
+                      levelProgress={character.current_job_class.level_progress}
+                      maxLevelReached={character.current_job_class.max_level_reached}
+                      maxLevel={character.current_job_class.job_class.max_level}
+                      className="shadow-none border border-gray-200"
+                    />
+                    <ExperienceAdjustmentForm
+                      characterId={character.id}
+                      characterName={character.name}
+                      currentLevel={character.current_job_class.level}
+                      currentExperience={character.current_job_class.experience}
+                      onSuccess={fetchCharacterDetails}
+                    />
                   </div>
                 </div>
               </div>
