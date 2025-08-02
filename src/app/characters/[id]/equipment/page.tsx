@@ -36,6 +36,7 @@ interface Character {
     id: number
     name: string
     level: number
+    can_equip_left_hand: boolean
   }
 }
 
@@ -122,6 +123,10 @@ export default function CharacterEquipmentPage() {
     // アイテムタイプと装備スロットの対応チェック（CharacterItemモデルと同じロジック）
     switch (item.item_type) {
       case 'weapon':
+        if (slot === '左手') {
+          // 左手装備は職業の設定に依存
+          return equipmentData?.character.current_job?.can_equip_left_hand || false
+        }
         return ['右手', '左手'].includes(slot)
       case 'armor':
         return ['頭', '胴', '腰', '腕', '足'].includes(slot)
@@ -130,6 +135,13 @@ export default function CharacterEquipmentPage() {
       default:
         return false
     }
+  }
+
+  const canSelectSlot = (slot: string) => {
+    if (slot === '左手') {
+      return equipmentData?.character.current_job?.can_equip_left_hand || false
+    }
+    return true
   }
 
   if (loading) {
@@ -190,11 +202,17 @@ export default function CharacterEquipmentPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.entries(equipmentData.equipment_slots).map(([slot, slotName]) => {
                 const equippedItem = equipmentData.equipped_items[slot]
+                const canSelect = canSelectSlot(slot)
                 
                 return (
-                  <div key={slot} className="border border-gray-200 rounded-lg p-4">
+                  <div key={slot} className={`border border-gray-200 rounded-lg p-4 ${!canSelect ? 'bg-gray-50 opacity-60' : ''}`}>
                     <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-gray-700">{slotName}</h4>
+                      <h4 className={`font-medium ${canSelect ? 'text-gray-700' : 'text-gray-400'}`}>
+                        {slotName}
+                        {!canSelect && (
+                          <span className="text-xs ml-1 text-red-500">(職業制限)</span>
+                        )}
+                      </h4>
                       {equippedItem && (
                         <button
                           onClick={() => handleUnequip(equippedItem.id)}
@@ -250,15 +268,22 @@ export default function CharacterEquipmentPage() {
                       </div>
                     ) : (
                       <div className="text-center py-8">
-                        <button
-                          onClick={() => {
-                            setSelectedSlot(slot)
-                            setShowAvailableItems(true)
-                          }}
-                          className="text-blue-500 hover:text-blue-700"
-                        >
-                          装備を選択
-                        </button>
+                        {canSelect ? (
+                          <button
+                            onClick={() => {
+                              setSelectedSlot(slot)
+                              setShowAvailableItems(true)
+                            }}
+                            className="text-blue-500 hover:text-blue-700"
+                          >
+                            装備を選択
+                          </button>
+                        ) : (
+                          <div className="text-gray-400">
+                            <div className="text-sm">この職業では</div>
+                            <div className="text-sm">使用できません</div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
