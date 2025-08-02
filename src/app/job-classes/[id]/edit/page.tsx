@@ -28,6 +28,7 @@ interface JobClassFormData {
   magic_defense_multiplier: number
   agility_multiplier: number
   luck_multiplier: number
+  can_equip_left_hand: boolean
 }
 
 interface JobClass {
@@ -57,6 +58,7 @@ interface JobClass {
     agility: number
     luck: number
   }
+  can_equip_left_hand: boolean
 }
 
 export default function EditJobClassPage() {
@@ -87,7 +89,8 @@ export default function EditJobClassPage() {
     magic_attack_multiplier: 0,
     magic_defense_multiplier: 0,
     agility_multiplier: 0,
-    luck_multiplier: 0
+    luck_multiplier: 0,
+    can_equip_left_hand: false
   })
 
   useEffect(() => {
@@ -122,7 +125,8 @@ export default function EditJobClassPage() {
         magic_attack_multiplier: response.multipliers.magic_attack,
         magic_defense_multiplier: response.multipliers.magic_defense,
         agility_multiplier: response.multipliers.agility,
-        luck_multiplier: response.multipliers.luck
+        luck_multiplier: response.multipliers.luck,
+        can_equip_left_hand: response.can_equip_left_hand
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : '職業データの取得に失敗しました')
@@ -276,6 +280,17 @@ export default function EditJobClassPage() {
                   onChange={(e) => handleInputChange('exp_multiplier', parseFloat(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
+              </div>
+              <div>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={formData.can_equip_left_hand}
+                    onChange={(e) => handleInputChange('can_equip_left_hand', e.target.checked)}
+                    className="mr-2"
+                  />
+                  <span className="text-sm font-medium text-gray-700">左手装備可能</span>
+                </label>
               </div>
             </div>
           </div>

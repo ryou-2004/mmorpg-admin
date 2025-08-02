@@ -34,6 +34,7 @@ interface JobClassDetail {
     agility: number
     luck: number
   }
+  can_equip_left_hand: boolean
   stats: {
     total_characters: number
     average_level: number
@@ -172,6 +173,16 @@ export default function JobClassDetailPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700">経験値倍率</label>
                 <p className="mt-1 text-lg font-semibold">{jobClass.experience_multiplier}x</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">左手装備</label>
+                <p className="mt-1 text-lg font-semibold">
+                  {jobClass.can_equip_left_hand ? (
+                    <span className="text-green-600">可能</span>
+                  ) : (
+                    <span className="text-red-600">不可</span>
+                  )}
+                </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">ID</label>

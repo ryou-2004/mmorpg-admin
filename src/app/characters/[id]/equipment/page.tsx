@@ -119,8 +119,17 @@ export default function CharacterEquipmentPage() {
   }
 
   const canEquipToSlot = (item: Item, slot: string) => {
-    const slotType = slot.replace(/_\d+$/, '') // accessory_1 -> accessory
-    return item.item_type === slotType || (item.item_type === 'accessory' && slotType === 'accessory')
+    // アイテムタイプと装備スロットの対応チェック（CharacterItemモデルと同じロジック）
+    switch (item.item_type) {
+      case 'weapon':
+        return ['右手', '左手'].includes(slot)
+      case 'armor':
+        return ['頭', '胴', '腰', '腕', '足'].includes(slot)
+      case 'accessory':
+        return ['指輪', '首飾り'].includes(slot)
+      default:
+        return false
+    }
   }
 
   if (loading) {

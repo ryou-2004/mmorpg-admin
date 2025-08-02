@@ -16,6 +16,7 @@ interface JobClass {
   created_at: string
   active: boolean
   characters_count: number
+  can_equip_left_hand: boolean
 }
 
 export default function JobClassesPage() {
@@ -138,6 +139,12 @@ export default function JobClassesPage() {
                     <div className="flex justify-between">
                       <span>習得プレイヤー数:</span>
                       <span className="font-medium text-blue-600">{jobClass.characters_count}人</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>左手装備:</span>
+                      <span className={`font-medium ${jobClass.can_equip_left_hand ? 'text-green-600' : 'text-red-600'}`}>
+                        {jobClass.can_equip_left_hand ? '可能' : '不可'}
+                      </span>
                     </div>
                   </div>
                   
