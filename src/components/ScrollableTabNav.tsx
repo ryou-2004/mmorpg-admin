@@ -39,12 +39,20 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
   const [tabs, setTabs] = useState<TabItem[]>(() => {
     if (typeof window !== 'undefined') {
       const savedTabs = localStorage.getItem('admin-tabs')
-      if (savedTabs) {
+      const savedVersion = localStorage.getItem('admin-tabs-version')
+      const currentVersion = '1.1' // 装備状況一覧追加版
+      
+      if (savedTabs && savedVersion === currentVersion) {
         try {
           return JSON.parse(savedTabs)
         } catch {
           return DEFAULT_TABS
         }
+      } else {
+        // バージョンが異なる場合はデフォルトに戻して新バージョンを保存
+        localStorage.setItem('admin-tabs-version', currentVersion)
+        localStorage.setItem('admin-tabs', JSON.stringify(DEFAULT_TABS))
+        return DEFAULT_TABS
       }
     }
     return DEFAULT_TABS
@@ -78,11 +86,13 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
     )
     setTabs(updatedTabs)
     localStorage.setItem('admin-tabs', JSON.stringify(updatedTabs))
+    localStorage.setItem('admin-tabs-version', '1.1')
   }
 
   const resetTabs = () => {
     setTabs(DEFAULT_TABS)
     localStorage.setItem('admin-tabs', JSON.stringify(DEFAULT_TABS))
+    localStorage.setItem('admin-tabs-version', '1.1')
   }
 
   useEffect(() => {
