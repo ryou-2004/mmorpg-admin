@@ -5,6 +5,7 @@ interface ExperienceDisplayProps {
   experience: number
   expToNextLevel: number
   levelProgress: number
+  currentLevelExperience?: number
   maxLevelReached?: boolean
   maxLevel?: number
   className?: string
@@ -15,11 +16,11 @@ export default function ExperienceDisplay({
   experience,
   expToNextLevel,
   levelProgress,
+  currentLevelExperience = 0,
   maxLevelReached = false,
   maxLevel,
   className = ''
 }: ExperienceDisplayProps) {
-  const currentLevelExp = experience - expToNextLevel
   const nextLevelExp = experience + expToNextLevel
 
   return (
@@ -62,7 +63,7 @@ export default function ExperienceDisplay({
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-gray-500">現レベル経験値:</span>
-              <div className="font-medium">{currentLevelExp.toLocaleString()}</div>
+              <div className="font-medium">{currentLevelExperience.toLocaleString()}</div>
             </div>
             <div>
               <span className="text-gray-500">次レベルまで:</span>

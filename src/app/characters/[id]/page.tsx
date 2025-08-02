@@ -28,6 +28,7 @@ interface CharacterDetails {
     skill_points: number
     exp_to_next_level: number
     level_progress: number
+    current_level_experience: number
     max_level_reached: boolean
     job_class: {
       id: number
@@ -210,6 +211,7 @@ export default function CharacterDetailPage() {
                       experience={character.current_job_class.experience}
                       expToNextLevel={character.current_job_class.exp_to_next_level}
                       levelProgress={character.current_job_class.level_progress}
+                      currentLevelExperience={character.current_job_class.current_level_experience}
                       maxLevelReached={character.current_job_class.max_level_reached}
                       maxLevel={character.current_job_class.job_class.max_level}
                       className="shadow-none border border-gray-200"
