@@ -31,6 +31,7 @@ interface Item {
   sale_type: string
   icon_path: string
   active: boolean
+  equipment_slot?: string
   created_at: string
   updated_at: string
   statistics: ItemStatistics
@@ -273,6 +274,15 @@ export default function ItemDetailPage() {
                   {item.icon_path || '未設定'}
                 </p>
               </div>
+              
+              {item.equipment_slot && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">装備スロット</label>
+                  <p className="mt-1 text-lg font-semibold text-purple-600">
+                    {item.equipment_slot}
+                  </p>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>

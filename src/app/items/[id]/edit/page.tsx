@@ -20,6 +20,7 @@ interface ItemFormData {
   sale_type: string
   icon_path: string
   active: boolean
+  equipment_slot?: string
 }
 
 interface Item extends ItemFormData {
@@ -51,7 +52,8 @@ export default function EditItemPage() {
     effects: [],
     sale_type: 'shop',
     icon_path: '',
-    active: true
+    active: true,
+    equipment_slot: undefined
   })
 
   const [jobRequirementInput, setJobRequirementInput] = useState('')
@@ -88,7 +90,8 @@ export default function EditItemPage() {
         effects: itemData.effects,
         sale_type: itemData.sale_type,
         icon_path: itemData.icon_path,
-        active: itemData.active
+        active: itemData.active,
+        equipment_slot: itemData.equipment_slot
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'アイテムの取得に失敗しました')
@@ -302,7 +305,7 @@ export default function EditItemPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   アイテムタイプ *
@@ -310,7 +313,13 @@ export default function EditItemPage() {
                 <select
                   required
                   value={formData.item_type}
-                  onChange={(e) => handleInputChange('item_type', e.target.value)}
+                  onChange={(e) => {
+                    handleInputChange('item_type', e.target.value)
+                    // アイテムタイプが変更されたら装備スロットをリセット
+                    if (!['weapon', 'armor', 'accessory'].includes(e.target.value)) {
+                      handleInputChange('equipment_slot', undefined)
+                    }
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="weapon">武器</option>
@@ -339,7 +348,9 @@ export default function EditItemPage() {
                   <option value="legendary">レジェンダリー</option>
                 </select>
               </div>
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   売却タイプ *
@@ -356,6 +367,34 @@ export default function EditItemPage() {
                   <option value="unsellable">売却不可</option>
                 </select>
               </div>
+
+              {/* 装備スロット（装備品の場合のみ表示） */}
+              {['weapon', 'armor', 'accessory'].includes(formData.item_type) && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    装備スロット
+                  </label>
+                  <select
+                    value={formData.equipment_slot || ''}
+                    onChange={(e) => handleInputChange('equipment_slot', e.target.value || undefined)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">選択してください</option>
+                    <option value="右手">右手</option>
+                    <option value="左手">左手</option>
+                    <option value="頭">頭</option>
+                    <option value="胴">胴</option>
+                    <option value="腰">腰</option>
+                    <option value="腕">腕</option>
+                    <option value="足">足</option>
+                    <option value="指輪">指輪</option>
+                    <option value="首飾り">首飾り</option>
+                  </select>
+                  <p className="mt-1 text-xs text-gray-500">
+                    装備品として使用する場合は装備スロットを選択してください
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

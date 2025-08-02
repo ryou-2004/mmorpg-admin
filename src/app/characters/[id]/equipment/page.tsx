@@ -76,11 +76,18 @@ export default function CharacterEquipmentPage() {
 
   const handleEquip = async (characterItemId: number, slot: string) => {
     try {
-      await apiClient.post(`/admin/characters/${characterId}/equipment/equip?test=true`, {
+      const response = await apiClient.post(`/admin/characters/${characterId}/equipment/equip?test=true`, {
         character_item_id: characterItemId,
         slot: slot
       })
-      await fetchEquipmentData()
+      
+      // APIレスポンスから最新データを直接使用
+      setEquipmentData(prev => prev ? {
+        ...prev,
+        total_stats: response.total_stats,
+        equipped_items: response.equipped_items
+      } : null)
+      
       setShowAvailableItems(false)
       setSelectedSlot(null)
     } catch (err) {
@@ -90,10 +97,16 @@ export default function CharacterEquipmentPage() {
 
   const handleUnequip = async (characterItemId: number) => {
     try {
-      await apiClient.post(`/admin/characters/${characterId}/equipment/unequip?test=true`, {
+      const response = await apiClient.post(`/admin/characters/${characterId}/equipment/unequip?test=true`, {
         character_item_id: characterItemId
       })
-      await fetchEquipmentData()
+      
+      // APIレスポンスから最新データを直接使用
+      setEquipmentData(prev => prev ? {
+        ...prev,
+        total_stats: response.total_stats,
+        equipped_items: response.equipped_items
+      } : null)
     } catch (err) {
       alert(err instanceof Error ? err.message : '装備解除に失敗しました')
     }

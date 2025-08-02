@@ -21,6 +21,7 @@ interface Item {
   sale_type: string
   icon_path: string
   active: boolean
+  equipment_slot?: string
   created_at: string
 }
 
@@ -113,6 +114,11 @@ export default function ItemsPage() {
       case 'unsellable': return '売却不可'
       default: return saleType
     }
+  }
+
+  const getEquipmentSlotDisplay = (equipmentSlot?: string) => {
+    if (!equipmentSlot) return null
+    return equipmentSlot
   }
 
   if (loading) {
@@ -266,6 +272,12 @@ export default function ItemsPage() {
                       <span className="text-gray-500">タイプ:</span>
                       <span className="font-medium">{getItemTypeDisplay(item.item_type)}</span>
                     </div>
+                    {getEquipmentSlotDisplay(item.equipment_slot) && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">装備スロット:</span>
+                        <span className="font-medium text-purple-600">{getEquipmentSlotDisplay(item.equipment_slot)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-gray-500">必要レベル:</span>
                       <span className="font-medium">Lv.{item.level_requirement}</span>
