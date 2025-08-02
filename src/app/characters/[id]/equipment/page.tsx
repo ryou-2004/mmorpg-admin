@@ -291,10 +291,26 @@ export default function CharacterEquipmentPage() {
                 </div>
                 
                 <div className="max-h-96 overflow-y-auto">
-                  <div className="space-y-2">
-                    {equipmentData.available_items
+                  {(() => {
+                    const availableItemsForSlot = equipmentData.available_items
                       .filter(item => canEquipToSlot(item.item, selectedSlot))
-                      .map(characterItem => (
+                    
+                    if (availableItemsForSlot.length === 0) {
+                      return (
+                        <div className="text-center py-8">
+                          <div className="text-gray-500 mb-2">
+                            この装備スロットに装備可能なアイテムがありません
+                          </div>
+                          <div className="text-sm text-gray-400">
+                            {equipmentData.equipment_slots[selectedSlot]}に対応するアイテムを入手してください
+                          </div>
+                        </div>
+                      )
+                    }
+                    
+                    return (
+                      <div className="space-y-2">
+                        {availableItemsForSlot.map(characterItem => (
                         <div 
                           key={characterItem.id}
                           className="border border-gray-200 rounded p-3 hover:bg-gray-50 cursor-pointer"
@@ -336,7 +352,9 @@ export default function CharacterEquipmentPage() {
                           </div>
                         </div>
                       ))}
-                  </div>
+                      </div>
+                    )
+                  })()}
                 </div>
               </div>
             </div>
