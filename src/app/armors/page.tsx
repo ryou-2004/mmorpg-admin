@@ -14,7 +14,6 @@ interface Armor {
   level_requirement: number
   buy_price: number
   sell_price: number
-  equipment_slot: string
   is_shield: boolean
   active: boolean
   character_count: number
@@ -40,11 +39,11 @@ export default function ArmorsPage() {
   const [meta, setMeta] = useState<ArmorsResponse['meta']>({ current_page: 1, total_pages: 1, total_count: 0 })
 
   const armorCategories = [
-    { value: 'head', label: '頭防具' },
-    { value: 'body', label: '胴防具' },
-    { value: 'waist', label: '腰防具' },
-    { value: 'arm', label: '腕防具' },
-    { value: 'leg', label: '足防具' },
+    { value: 'head', label: '頭' },
+    { value: 'body', label: '胴' },
+    { value: 'waist', label: '腰' },
+    { value: 'arm', label: '腕' },
+    { value: 'leg', label: '足' },
     { value: 'shield', label: '盾' }
   ]
 
@@ -161,7 +160,6 @@ export default function ArmorsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">防具名</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">カテゴリ</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レアリティ</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">装備スロット</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">必要レベル</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">価格</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">所持キャラ数</th>
@@ -191,9 +189,6 @@ export default function ArmorsPage() {
                     <span className={`text-sm font-medium ${getRarityColor(armor.rarity)}`}>
                       {armor.rarity}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {armor.equipment_slot}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     Lv.{armor.level_requirement}

@@ -14,7 +14,6 @@ interface Weapon {
   level_requirement: number
   buy_price: number
   sell_price: number
-  equipment_slot: string
   one_handed: boolean
   two_handed: boolean
   attack_type: string
@@ -178,7 +177,6 @@ export default function WeaponsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">カテゴリ</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レアリティ</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">攻撃タイプ</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">装備スロット</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">必要レベル</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">価格</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">所持キャラ数</th>
@@ -213,9 +211,6 @@ export default function WeaponsPage() {
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getAttackTypeColor(weapon.attack_type)}`}>
                       {weapon.attack_type}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {weapon.equipment_slot}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     Lv.{weapon.level_requirement}
