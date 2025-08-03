@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
@@ -19,6 +20,7 @@ export default function CharactersPage() {
   const [characters, setCharacters] = useState<Character[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     fetchCharacters()
@@ -93,12 +95,15 @@ export default function CharactersPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">キャラクター名</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ゴールド</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {characters.map((character) => (
-                    <tr key={character.id} className="hover:bg-gray-50">
+                    <tr 
+                      key={character.id} 
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => router.push(`/characters/${character.id}`)}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{character.id}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{character.current_job_name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{character.current_job_level}</td>
@@ -112,22 +117,6 @@ export default function CharactersPage() {
                         }`}>
                           {character.active ? 'アクティブ' : '無効'}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <div className="flex space-x-2">
-                          <Link
-                            href={`/characters/${character.id}`}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm"
-                          >
-                            詳細
-                          </Link>
-                          <Link
-                            href={`/characters/${character.id}/edit`}
-                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm"
-                          >
-                            編集
-                          </Link>
-                        </div>
                       </td>
                     </tr>
                   ))}

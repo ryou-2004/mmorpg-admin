@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AdminLayout from '@/components/AdminLayout'
@@ -37,6 +38,7 @@ export default function ArmorsPage() {
   const [categoryFilter, setCategoryFilter] = useState('')
   const [rarityFilter, setRarityFilter] = useState('')
   const [meta, setMeta] = useState<ArmorsResponse['meta']>({ current_page: 1, total_pages: 1, total_count: 0 })
+  const router = useRouter()
 
   const armorCategories = [
     { value: 'head', label: '頭' },
@@ -174,17 +176,18 @@ export default function ArmorsPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {armors.map((armor) => (
-                <tr key={armor.id} className="hover:bg-gray-50">
+                <tr 
+                  key={armor.id} 
+                  className="hover:bg-gray-50 cursor-pointer"
+                  onClick={() => router.push(`/armors/${armor.id}`)}
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <Link 
-                        href={`/armors/${armor.id}`}
-                        className="text-blue-600 hover:text-blue-900 font-medium"
-                      >
-                        {armor.name}
-                      </Link>
-                      <div className="text-sm text-gray-500">
-                        {armor.armor_category_name}
+                    <div className="flex items-center">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{armor.name}</div>
+                        <div className="text-sm text-gray-500">
+                          {armor.armor_category_name}
+                        </div>
                       </div>
                     </div>
                   </td>
