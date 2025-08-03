@@ -145,6 +145,12 @@ export default function ArmorsPage() {
           <p className="text-sm text-gray-600">
             {meta.total_count}件の防具が見つかりました
           </p>
+          <Link
+            href="/armors/new"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            新規作成
+          </Link>
         </div>
       </div>
 
