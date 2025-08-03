@@ -25,6 +25,11 @@ interface Weapon {
     target?: string
     multiplier?: number
   }>
+  formatted_effects: Array<{
+    type: string
+    description: string
+    raw: any
+  }>
   icon_path: string
   sale_type: string
   one_handed: boolean
@@ -109,26 +114,23 @@ export default function WeaponDetailPage({ params }: { params: { id: string } })
   }
 
   return (
-    <AdminLayout title="武器詳細">
+    <AdminLayout title="武器詳細" showBackButton backHref="/weapons">
+      {/* フローティング編集ボタン */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Link
+          href={`/weapons/${weapon.id}/edit`}
+          className="bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center group"
+          title="編集"
+        >
+          <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </Link>
+      </div>
+      
       <div className="p-6">
         <div className="mb-6">
-          <div className="flex justify-between items-start mb-4">
-            <h1 className="text-2xl font-bold text-gray-900">{weapon.name}</h1>
-            <div className="flex space-x-2">
-              <Link
-                href={`/weapons/${weapon.id}/edit`}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                編集
-              </Link>
-              <Link
-                href="/weapons"
-                className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-              >
-                一覧に戻る
-              </Link>
-            </div>
-          </div>
+          <h1 className="text-2xl font-bold text-gray-900">{weapon.name}</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -235,19 +237,14 @@ export default function WeaponDetailPage({ params }: { params: { id: string } })
           )}
 
           {/* 効果 */}
-          {weapon.effects && weapon.effects.length > 0 && (
+          {weapon.formatted_effects && weapon.formatted_effects.length > 0 && (
             <div className="bg-white shadow rounded-lg p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">効果</h2>
               <div className="space-y-2">
-                {weapon.effects.map((effect, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                {weapon.formatted_effects.map((effect, index) => (
+                  <div key={index} className="bg-gray-50 p-3 rounded">
                     <span className="text-sm font-medium text-gray-900">
-                      {effect.type}
-                      {effect.stat && ` (${effect.stat})`}
-                      {effect.target && ` → ${effect.target}`}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      {effect.multiplier ? `${effect.multiplier}倍` : `+${effect.value}`}
+                      {effect.description}
                     </span>
                   </div>
                 ))}
