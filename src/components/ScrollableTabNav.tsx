@@ -20,6 +20,8 @@ const DEFAULT_TABS: TabItem[] = [
   { id: 'job-classes', label: '職業管理', href: '/job-classes', visible: true },
   { id: 'job-stats', label: '職業統計', href: '/job-stats', visible: true },
   { id: 'items', label: 'アイテム管理', href: '/items', visible: true },
+  { id: 'weapons', label: '武器管理', href: '/weapons', visible: true },
+  { id: 'armors', label: '防具管理', href: '/armors', visible: true },
   { id: 'skills', label: 'スキル管理', href: '/skills', visible: false },
   { id: 'battles', label: '戦闘ログ', href: '/battles', visible: false },
   { id: 'shops', label: 'ショップ管理', href: '/shops', visible: false }
@@ -40,7 +42,7 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
     if (typeof window !== 'undefined') {
       const savedTabs = localStorage.getItem('admin-tabs')
       const savedVersion = localStorage.getItem('admin-tabs-version')
-      const currentVersion = '1.3' // 装備状況一覧パス再変更版
+      const currentVersion = '1.4' // 武器・防具管理画面追加版
       
       if (savedTabs && savedVersion === currentVersion) {
         try {
