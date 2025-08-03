@@ -16,9 +16,6 @@ interface Armor {
   sell_price: number
   equipment_slot: string
   is_shield: boolean
-  covers_torso: boolean
-  covers_limbs: boolean
-  covers_head: boolean
   active: boolean
   character_count: number
   created_at: string
@@ -92,14 +89,6 @@ export default function ArmorsPage() {
     }
   }
 
-  const getCoverageInfo = (armor: Armor) => {
-    const coverage = []
-    if (armor.covers_head) coverage.push('頭部')
-    if (armor.covers_torso) coverage.push('胴体')
-    if (armor.covers_limbs) coverage.push('四肢')
-    if (armor.is_shield) coverage.push('盾')
-    return coverage.length > 0 ? coverage.join(', ') : '-'
-  }
 
   return (
     <AdminLayout title="防具管理">
@@ -172,7 +161,6 @@ export default function ArmorsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">防具名</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">カテゴリ</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レアリティ</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">防御範囲</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">装備スロット</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">必要レベル</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">価格</th>
@@ -202,11 +190,6 @@ export default function ArmorsPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`text-sm font-medium ${getRarityColor(armor.rarity)}`}>
                       {armor.rarity}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-900">
-                      {getCoverageInfo(armor)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
