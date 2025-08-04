@@ -58,7 +58,7 @@ export default function ArmorNewPage() {
         active: formData.get('active') === 'on'
       }
 
-      const response = await apiClient.post('/admin/armors', { armor: armorData })
+      const response = await apiClient.post<{ armor: { id: number } }>('/admin/armors', { armor: armorData })
       router.push(`/armors/${response.armor.id}`)
     } catch (error: any) {
       if (error.response?.data?.errors) {

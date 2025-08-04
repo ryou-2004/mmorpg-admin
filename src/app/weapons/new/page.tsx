@@ -71,7 +71,7 @@ export default function WeaponNewPage() {
         active: formData.get('active') === 'on'
       }
 
-      const response = await apiClient.post('/admin/weapons', { weapon: weaponData })
+      const response = await apiClient.post<{ weapon: { id: number } }>('/admin/weapons', { weapon: weaponData })
       router.push(`/weapons/${response.weapon.id}`)
     } catch (error: any) {
       if (error.response?.data?.errors) {

@@ -7,6 +7,157 @@ import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
 import AdminLayout from '@/components/AdminLayout'
 
+// SkillsTabコンポーネント
+interface SkillLine {
+  id: number
+  name: string
+  description: string
+  skill_line_type: string
+  skill_line_type_name: string
+  unlock_level: number
+  nodes_count: number
+  active: boolean
+  created_at: string
+  updated_at: string
+}
+
+interface SkillsTabProps {
+  jobClassId: number
+  jobClassName: string
+}
+
+function SkillsTab({ jobClassId, jobClassName }: SkillsTabProps) {
+  const [skillLines, setSkillLines] = useState<SkillLine[]>([])
+  const [skillsLoading, setSkillsLoading] = useState(true)
+  const [skillsError, setSkillsError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchSkillLines()
+  }, [jobClassId])
+
+  const fetchSkillLines = async () => {
+    try {
+      setSkillsLoading(true)
+      const response = await apiClient.get<{
+        job_class: { id: number; name: string; job_type: string }
+        skill_lines: SkillLine[]
+        meta: { total_count: number }
+      }>(`/admin/job_classes/${jobClassId}/skill_lines?test=true`)
+      setSkillLines(response.skill_lines)
+    } catch (err) {
+      setSkillsError(err instanceof Error ? err.message : 'スキルライン情報の取得に失敗しました')
+    } finally {
+      setSkillsLoading(false)
+    }
+  }
+
+  const getSkillLineTypeBadge = (type: string) => {
+    switch (type) {
+      case 'weapon': return 'bg-red-100 text-red-800'
+      case 'job_specific': return 'bg-blue-100 text-blue-800'
+      default: return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  if (skillsLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg">スキルライン情報を読み込み中...</div>
+      </div>
+    )
+  }
+
+  if (skillsError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-md p-4">
+        <div className="text-red-700">エラー: {skillsError}</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* スキル統計へのリンク */}
+      <div className="bg-white shadow rounded-lg p-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h3 className="text-lg font-medium text-gray-900">{jobClassName}のスキルライン</h3>
+            <p className="mt-1 text-sm text-gray-600">この職業で使用できるスキルライン一覧</p>
+          </div>
+          <Link
+            href={`/job-classes/${jobClassId}/skill-statistics`}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            統計を見る
+          </Link>
+        </div>
+      </div>
+
+      {/* スキルライン一覧 */}
+      {skillLines.length > 0 ? (
+        <div className="bg-white shadow rounded-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">スキルライン名</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">タイプ</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">アンロックレベル</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ノード数</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状態</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {skillLines.map((skillLine) => (
+                <tr key={skillLine.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">{skillLine.name}</div>
+                      <div className="text-sm text-gray-500">{skillLine.description}</div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getSkillLineTypeBadge(skillLine.skill_line_type)}`}>
+                      {skillLine.skill_line_type_name}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    Lv.{skillLine.unlock_level}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {skillLine.nodes_count}個
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      skillLine.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {skillLine.active ? '有効' : '無効'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <Link
+                      href={`/job-classes/${jobClassId}/skill-lines/${skillLine.id}`}
+                      className="text-blue-600 hover:text-blue-900 mr-4"
+                    >
+                      詳細
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="bg-white shadow rounded-lg p-6">
+          <div className="text-center text-gray-500">
+            <p>この職業にはまだスキルラインが設定されていません。</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 interface JobClassDetail {
   id: number
   name: string
@@ -67,6 +218,7 @@ export default function JobClassDetailPage() {
   const [jobClass, setJobClass] = useState<JobClassDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'details' | 'skills'>('details')
 
   useEffect(() => {
     fetchJobClass()
@@ -152,8 +304,36 @@ export default function JobClassDetailPage() {
           </Link>
         </div>
         
-        <div className="space-y-6">
-          {/* 基本情報 */}
+        {/* タブナビゲーション */}
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => setActiveTab('details')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'details'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              基本情報
+            </button>
+            <button
+              onClick={() => setActiveTab('skills')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'skills'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              スキル管理
+            </button>
+          </nav>
+        </div>
+        
+        {/* タブコンテンツ */}
+        {activeTab === 'details' ? (
+          <div className="space-y-6">
+            {/* 基本情報 */}
           <div className="bg-white shadow rounded-lg p-6">
             <div className="flex justify-between items-start mb-4">
               <div>
@@ -329,8 +509,10 @@ export default function JobClassDetailPage() {
               </div>
             </div>
           )}
-
-        </div>
+          </div>
+        ) : (
+          <SkillsTab jobClassId={jobClass.id} jobClassName={jobClass.name} />
+        )}
       </AdminLayout>
     </AuthGuard>
   )
