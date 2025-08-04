@@ -12,12 +12,14 @@ interface Weapon {
   weapon_category: string
   weapon_category_name: string
   rarity: string
+  rarity_name: string
   level_requirement: number
   buy_price: number
   sell_price: number
   one_handed: boolean
   two_handed: boolean
   attack_type: string
+  attack_type_name: string
   active: boolean
   character_count: number
   created_at: string
@@ -213,12 +215,12 @@ export default function WeaponsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`text-sm font-medium ${getRarityColor(weapon.rarity)}`}>
-                      {weapon.rarity}
+                      {weapon.rarity_name}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getAttackTypeColor(weapon.attack_type)}`}>
-                      {weapon.attack_type}
+                      {weapon.attack_type_name}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

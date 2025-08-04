@@ -12,6 +12,7 @@ interface Armor {
   armor_category: string
   armor_category_name: string
   rarity: string
+  rarity_name: string
   level_requirement: number
   buy_price: number
   sell_price: number
@@ -196,7 +197,7 @@ export default function ArmorsPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`text-sm font-medium ${getRarityColor(armor.rarity)}`}>
-                      {armor.rarity}
+                      {armor.rarity_name}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
