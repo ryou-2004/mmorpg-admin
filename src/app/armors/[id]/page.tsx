@@ -13,6 +13,7 @@ interface Armor {
   armor_category: string
   armor_category_name: string
   rarity: string
+  rarity_name: string
   max_stack: number
   buy_price: number
   sell_price: number
@@ -134,7 +135,7 @@ export default function ArmorDetailPage({ params }: { params: { id: string } }) 
                 <dt className="text-sm font-medium text-gray-500">レアリティ</dt>
                 <dd className="mt-1">
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRarityColor(armor.rarity)}`}>
-                    {armor.rarity}
+                    {armor.rarity_name}
                   </span>
                 </dd>
               </div>

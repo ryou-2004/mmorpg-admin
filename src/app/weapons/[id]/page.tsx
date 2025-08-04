@@ -13,6 +13,7 @@ interface Weapon {
   weapon_category: string
   weapon_category_name: string
   rarity: string
+  rarity_name: string
   max_stack: number
   buy_price: number
   sell_price: number
@@ -36,6 +37,7 @@ interface Weapon {
   two_handed: boolean
   can_use_left_hand: boolean
   attack_type: string
+  attack_type_name: string
   physical: boolean
   magical: boolean
   ranged: boolean
@@ -150,7 +152,7 @@ export default function WeaponDetailPage({ params }: { params: { id: string } })
                 <dt className="text-sm font-medium text-gray-500">レアリティ</dt>
                 <dd className="mt-1">
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRarityColor(weapon.rarity)}`}>
-                    {weapon.rarity}
+                    {weapon.rarity_name}
                   </span>
                 </dd>
               </div>
@@ -158,7 +160,7 @@ export default function WeaponDetailPage({ params }: { params: { id: string } })
                 <dt className="text-sm font-medium text-gray-500">攻撃タイプ</dt>
                 <dd className="mt-1">
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getAttackTypeColor(weapon.attack_type)}`}>
-                    {weapon.attack_type}
+                    {weapon.attack_type_name}
                   </span>
                 </dd>
               </div>
