@@ -12,6 +12,7 @@ interface Weapon {
   description: string
   weapon_category: string
   rarity: string
+  attack_type: string
   max_stack: number
   buy_price: number
   sell_price: number
@@ -62,6 +63,13 @@ export default function WeaponEditPage({ params }: { params: { id: string } }) {
     { value: 'legendary', label: 'レジェンダリー' }
   ]
 
+  const attackTypes = [
+    { value: 'slash', label: '斬撃' },
+    { value: 'thrust', label: '刺突' },
+    { value: 'blunt', label: '打撃' },
+    { value: 'magical', label: '魔法' }
+  ]
+
   const saleTypes = [
     { value: 'both', label: '両方' },
     { value: 'shop', label: 'ショップのみ' },
@@ -99,6 +107,7 @@ export default function WeaponEditPage({ params }: { params: { id: string } }) {
         description: formData.get('description'),
         weapon_category: formData.get('weapon_category'),
         rarity: formData.get('rarity'),
+        attack_type: formData.get('attack_type'),
         max_stack: parseInt(formData.get('max_stack') as string),
         buy_price: parseInt(formData.get('buy_price') as string),
         sell_price: parseInt(formData.get('sell_price') as string),
@@ -228,6 +237,25 @@ export default function WeaponEditPage({ params }: { params: { id: string } }) {
                   {rarities.map(rarity => (
                     <option key={rarity.value} value={rarity.value}>
                       {rarity.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="attack_type" className="block text-sm font-medium text-gray-700">
+                  攻撃タイプ *
+                </label>
+                <select
+                  name="attack_type"
+                  id="attack_type"
+                  defaultValue={weapon.attack_type}
+                  required
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                >
+                  {attackTypes.map(attackType => (
+                    <option key={attackType.value} value={attackType.value}>
+                      {attackType.label}
                     </option>
                   ))}
                 </select>
