@@ -15,8 +15,7 @@ interface SkillNode {
   node_type_name: string
   points_required: number
   effects: any
-  position_x: number
-  position_y: number
+  display_order: number
   active: boolean
 }
 
