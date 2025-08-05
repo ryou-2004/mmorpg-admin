@@ -129,8 +129,9 @@ export default function SkillLineDetailPage() {
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 h-4 w-0.5 bg-gray-300"></div>
             )}
             
-            <div
-              className={`border-2 rounded-lg p-4 max-w-2xl mx-auto ${
+            <Link
+              href={`/job-classes/${jobClassId}/skill-lines/${skillLineId}/nodes/${node.id}`}
+              className={`block border-2 rounded-lg p-4 max-w-2xl mx-auto transition-colors hover:bg-blue-100 cursor-pointer ${
                 node.active ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50'
               }`}
             >
@@ -158,7 +159,7 @@ export default function SkillLineDetailPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         ))}
       </div>
