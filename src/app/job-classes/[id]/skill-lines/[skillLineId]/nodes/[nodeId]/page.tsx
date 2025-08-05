@@ -150,7 +150,8 @@ export default function SkillNodeDetailPage() {
                 戻る
               </Link>
               <div>
-                <nav className="text-sm breadcrumb">
+                <h1 className="text-2xl font-bold text-gray-900">{skillNode.name}</h1>
+                <nav className="text-sm breadcrumb mt-1">
                   <Link href="/job-classes" className="text-blue-600 hover:text-blue-800">職業一覧</Link>
                   <span className="mx-2 text-gray-400">/</span>
                   <Link href={`/job-classes/${jobClassId}`} className="text-blue-600 hover:text-blue-800">

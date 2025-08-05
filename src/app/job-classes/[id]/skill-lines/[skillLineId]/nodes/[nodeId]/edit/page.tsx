@@ -178,6 +178,12 @@ export default function SkillNodeEditPage() {
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 詳細に戻る
               </Link>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">スキルノード編集</h1>
+                {skillNode && (
+                  <p className="text-sm text-gray-600 mt-1">{skillNode.name}</p>
+                )}
+              </div>
             </div>
           </div>
 

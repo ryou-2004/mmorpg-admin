@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
-import AdminLayout from '@/components/AdminLayout'
 
 // SkillsTabコンポーネント
 interface SkillLine {
@@ -78,7 +77,7 @@ function SkillsTab({ jobClassId, jobClassName }: SkillsTabProps) {
   return (
     <div className="space-y-6">
       {/* スキル統計へのリンク */}
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="border rounded-lg p-6">
         <div className="flex justify-between items-center">
           <div>
             <h3 className="text-lg font-medium text-gray-900">{jobClassName}のスキルライン</h3>
@@ -95,7 +94,7 @@ function SkillsTab({ jobClassId, jobClassName }: SkillsTabProps) {
 
       {/* スキルライン一覧 */}
       {skillLines.length > 0 ? (
-        <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="border rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -148,7 +147,7 @@ function SkillsTab({ jobClassId, jobClassName }: SkillsTabProps) {
           </table>
         </div>
       ) : (
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="border rounded-lg p-6">
           <div className="text-center text-gray-500">
             <p>この職業にはまだスキルラインが設定されていません。</p>
           </div>
@@ -257,11 +256,13 @@ export default function JobClassDetailPage() {
   if (loading) {
     return (
       <AuthGuard>
-        <AdminLayout title="職業詳細" showBackButton backHref="/job-classes">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg">読み込み中...</div>
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg">読み込み中...</div>
+            </div>
           </div>
-        </AdminLayout>
+        </div>
       </AuthGuard>
     )
   }
@@ -269,11 +270,13 @@ export default function JobClassDetailPage() {
   if (error) {
     return (
       <AuthGuard>
-        <AdminLayout title="職業詳細" showBackButton backHref="/job-classes">
-          <div className="bg-red-50 border border-red-200 rounded-md p-4">
-            <div className="text-red-700">エラー: {error}</div>
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-red-50 border border-red-200 rounded-md p-4">
+              <div className="text-red-700">エラー: {error}</div>
+            </div>
           </div>
-        </AdminLayout>
+        </div>
       </AuthGuard>
     )
   }
@@ -281,60 +284,76 @@ export default function JobClassDetailPage() {
   if (!jobClass) {
     return (
       <AuthGuard>
-        <AdminLayout title="職業詳細" showBackButton backHref="/job-classes">
-          <div className="text-center text-gray-500">職業が見つかりません</div>
-        </AdminLayout>
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center text-gray-500">職業が見つかりません</div>
+          </div>
+        </div>
       </AuthGuard>
     )
   }
 
   return (
     <AuthGuard>
-      <AdminLayout title={`職業詳細: ${jobClass.name}`} showBackButton backHref="/job-classes">
-        {/* フローティング編集ボタン */}
-        <div className="fixed bottom-6 right-6 z-50">
-          <Link
-            href={`/job-classes/${jobClass.id}/edit`}
-            className="bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center group"
-            title="編集"
-          >
-            <svg className="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </Link>
-        </div>
-        
-        {/* タブナビゲーション */}
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveTab('details')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'details'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              基本情報
-            </button>
-            <button
-              onClick={() => setActiveTab('skills')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'skills'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              スキル管理
-            </button>
-          </nav>
-        </div>
-        
-        {/* タブコンテンツ */}
-        {activeTab === 'details' ? (
-          <div className="space-y-6">
-            {/* 基本情報 */}
-          <div className="bg-white shadow rounded-lg p-6">
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* ヘッダー */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link 
+                href="/job-classes"
+                className="flex items-center text-gray-600 hover:text-gray-900"
+              >
+                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                戻る
+              </Link>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{jobClass.name}</h1>
+                <nav className="text-sm breadcrumb mt-1">
+                  <Link href="/job-classes" className="text-blue-600 hover:text-blue-800">職業一覧</Link>
+                  <span className="mx-2 text-gray-400">/</span>
+                  <span className="text-gray-700">{jobClass.name}</span>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          {/* メインコンテンツ */}
+          <div className="bg-white shadow rounded-lg">
+            {/* タブナビゲーション */}
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-8 px-6">
+                <button
+                  onClick={() => setActiveTab('details')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'details'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  基本情報
+                </button>
+                <button
+                  onClick={() => setActiveTab('skills')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'skills'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  スキル管理
+                </button>
+              </nav>
+            </div>
+            
+            {/* タブコンテンツ */}
+            <div className="p-6">
+              {activeTab === 'details' ? (
+                <div className="space-y-6">
+                  {/* 基本情報 */}
+                  <div className="border rounded-lg p-6">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">{jobClass.name}</h2>
@@ -371,8 +390,8 @@ export default function JobClassDetailPage() {
             </div>
           </div>
 
-          {/* 基本ステータス */}
-          <div className="bg-white shadow rounded-lg p-6">
+                  {/* 基本ステータス */}
+                  <div className="border rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">基本ステータス</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
@@ -410,8 +429,8 @@ export default function JobClassDetailPage() {
             </div>
           </div>
 
-          {/* 成長率 */}
-          <div className="bg-white shadow rounded-lg p-6">
+                  {/* 成長率 */}
+                  <div className="border rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">成長率 (レベルアップ時の上昇値)</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
@@ -449,8 +468,8 @@ export default function JobClassDetailPage() {
             </div>
           </div>
 
-          {/* 統計情報 */}
-          <div className="bg-white shadow rounded-lg p-6">
+                  {/* 統計情報 */}
+                  <div className="border rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">統計情報</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-purple-50 rounded-lg">
@@ -468,9 +487,9 @@ export default function JobClassDetailPage() {
             </div>
           </div>
 
-          {/* 同職業ランキング */}
-          {jobClass.top_characters.length > 0 && (
-            <div className="bg-white shadow rounded-lg p-6">
+                  {/* 同職業ランキング */}
+                  {jobClass.top_characters.length > 0 && (
+                    <div className="border rounded-lg p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4">同職業ランキング（上位10名）</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -507,13 +526,26 @@ export default function JobClassDetailPage() {
                   </tbody>
                 </table>
               </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <SkillsTab jobClassId={jobClass.id} jobClassName={jobClass.name} />
+              )}
             </div>
-          )}
           </div>
-        ) : (
-          <SkillsTab jobClassId={jobClass.id} jobClassName={jobClass.name} />
-        )}
-      </AdminLayout>
+
+          {/* フローティング編集ボタン */}
+          <Link
+            href={`/job-classes/${jobClass.id}/edit`}
+            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-colors"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </Link>
+        </div>
+      </div>
     </AuthGuard>
   )
 }

@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { apiClient } from '@/lib/api'
 import AuthGuard from '@/components/AuthGuard'
-import AdminLayout from '@/components/AdminLayout'
 
 interface SkillNode {
   id: number
@@ -169,11 +168,13 @@ export default function SkillLineDetailPage() {
   if (loading) {
     return (
       <AuthGuard>
-        <AdminLayout title="スキルライン詳細" showBackButton backHref={`/job-classes/${jobClassId}`}>
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg">読み込み中...</div>
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-lg">読み込み中...</div>
+            </div>
           </div>
-        </AdminLayout>
+        </div>
       </AuthGuard>
     )
   }
@@ -181,11 +182,13 @@ export default function SkillLineDetailPage() {
   if (error) {
     return (
       <AuthGuard>
-        <AdminLayout title="スキルライン詳細" showBackButton backHref={`/job-classes/${jobClassId}`}>
-          <div className="bg-red-50 border border-red-200 rounded-md p-4">
-            <div className="text-red-700">エラー: {error}</div>
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-red-50 border border-red-200 rounded-md p-4">
+              <div className="text-red-700">エラー: {error}</div>
+            </div>
           </div>
-        </AdminLayout>
+        </div>
       </AuthGuard>
     )
   }
@@ -193,9 +196,11 @@ export default function SkillLineDetailPage() {
   if (!data) {
     return (
       <AuthGuard>
-        <AdminLayout title="スキルライン詳細" showBackButton backHref={`/job-classes/${jobClassId}`}>
-          <div className="text-center text-gray-500">スキルラインが見つかりません</div>
-        </AdminLayout>
+        <div className="min-h-screen bg-gray-50 p-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center text-gray-500">スキルラインが見つかりません</div>
+          </div>
+        </div>
       </AuthGuard>
     )
   }
@@ -204,12 +209,34 @@ export default function SkillLineDetailPage() {
 
   return (
     <AuthGuard>
-      <AdminLayout 
-        title={`${jobClass.name} - ${skillLine.name}`} 
-        showBackButton 
-        backHref={`/job-classes/${jobClassId}`}
-      >
-        <div className="space-y-6">
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* ヘッダー */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link 
+                href={`/job-classes/${jobClassId}`}
+                className="flex items-center text-gray-600 hover:text-gray-900"
+              >
+                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                戻る
+              </Link>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{skillLine.name}</h1>
+                <nav className="text-sm breadcrumb mt-1">
+                  <Link href="/job-classes" className="text-blue-600 hover:text-blue-800">職業一覧</Link>
+                  <span className="mx-2 text-gray-400">/</span>
+                  <Link href={`/job-classes/${jobClassId}`} className="text-blue-600 hover:text-blue-800">
+                    {jobClass.name}
+                  </Link>
+                  <span className="mx-2 text-gray-400">/</span>
+                  <span className="text-gray-700">{skillLine.name}</span>
+                </nav>
+              </div>
+            </div>
+          </div>
           {/* スキルライン基本情報 */}
           <div className="bg-white shadow rounded-lg p-6">
             <div className="flex justify-between items-start mb-4">
@@ -306,7 +333,7 @@ export default function SkillLineDetailPage() {
             {renderSkillTree(skillLine.skill_nodes)}
           </div>
         </div>
-      </AdminLayout>
+      </div>
     </AuthGuard>
   )
 }
