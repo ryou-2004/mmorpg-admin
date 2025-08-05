@@ -118,59 +118,48 @@ export default function SkillLineDetailPage() {
       )
     }
 
-    // ポジション別にノードをグループ化
-    const maxY = Math.max(...nodes.map(n => n.position_y))
-    const nodesByRow = Array.from({ length: maxY + 1 }, () => [] as SkillNode[])
-    
-    nodes.forEach(node => {
-      nodesByRow[node.position_y].push(node)
-    })
-
-    nodesByRow.forEach(row => {
-      row.sort((a, b) => a.position_x - b.position_x)
-    })
+    // 必要ポイント順でソートして1本道表示
+    const sortedNodes = [...nodes].sort((a, b) => a.points_required - b.points_required)
 
     return (
       <div className="space-y-4">
-        {nodesByRow.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex flex-wrap gap-4 justify-center">
-            {row.map((node) => (
-              <div
-                key={node.id}
-                className={`border-2 rounded-lg p-4 min-w-[200px] ${
-                  node.active ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50'
-                }`}
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-medium text-gray-900">{node.name}</h4>
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getNodeTypeBadge(node.node_type)}`}>
-                    {node.node_type_name}
+        {sortedNodes.map((node, index) => (
+          <div key={node.id} className="relative">
+            {/* 接続線（最初のノード以外） */}
+            {index > 0 && (
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 h-4 w-0.5 bg-gray-300"></div>
+            )}
+            
+            <div
+              className={`border-2 rounded-lg p-4 max-w-2xl mx-auto ${
+                node.active ? 'border-blue-300 bg-blue-50' : 'border-gray-300 bg-gray-50'
+              }`}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <h4 className="font-medium text-gray-900">{node.name}</h4>
+                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getNodeTypeBadge(node.node_type)}`}>
+                  {node.node_type_name}
+                </span>
+              </div>
+              
+              <p className="text-sm text-gray-600 mb-3">{node.description}</p>
+              
+              <div className="space-y-2">
+                <div className="text-sm">
+                  <span className="font-medium text-gray-700">必要ポイント:</span>
+                  <span className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">
+                    {node.points_required}
                   </span>
                 </div>
                 
-                <p className="text-sm text-gray-600 mb-3">{node.description}</p>
-                
-                <div className="space-y-2">
-                  <div className="text-sm">
-                    <span className="font-medium text-gray-700">必要ポイント:</span>
-                    <span className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">
-                      {node.points_required}
-                    </span>
-                  </div>
-                  
-                  <div className="text-sm">
-                    <span className="font-medium text-gray-700">効果:</span>
-                    <div className="mt-1 ml-2">
-                      {renderEffects(node.effects)}
-                    </div>
-                  </div>
-                  
-                  <div className="text-xs text-gray-500">
-                    位置: ({node.position_x}, {node.position_y})
+                <div className="text-sm">
+                  <span className="font-medium text-gray-700">効果:</span>
+                  <div className="mt-1 ml-2">
+                    {renderEffects(node.effects)}
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         ))}
       </div>
