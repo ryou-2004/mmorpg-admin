@@ -22,6 +22,7 @@ const DEFAULT_TABS: TabItem[] = [
   { id: 'items', label: 'アイテム管理', href: '/items', visible: true },
   { id: 'weapons', label: '武器管理', href: '/weapons', visible: true },
   { id: 'armors', label: '防具管理', href: '/armors', visible: true },
+  { id: 'skill-lines', label: 'スキルライン管理', href: '/skill-lines', visible: true },
   { id: 'skills', label: 'スキル管理', href: '/skills', visible: false },
   { id: 'battles', label: '戦闘ログ', href: '/battles', visible: false },
   { id: 'shops', label: 'ショップ管理', href: '/shops', visible: false }
@@ -42,7 +43,7 @@ export default function ScrollableTabNav({ className = '' }: ScrollableTabNavPro
     if (typeof window !== 'undefined') {
       const savedTabs = localStorage.getItem('admin-tabs')
       const savedVersion = localStorage.getItem('admin-tabs-version')
-      const currentVersion = '1.4' // 武器・防具管理画面追加版
+      const currentVersion = '1.5' // スキルライン管理画面追加版
       
       if (savedTabs && savedVersion === currentVersion) {
         try {
